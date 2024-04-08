@@ -6,9 +6,9 @@
 
     <changeSet id="init database" author="konstantin">
         <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
-
+<!--        defaultValueComputed="uuid_generate_v4()"-->
         <createTable tableName="person">
-            <column name="id" type="uuid">
+            <column name="id" type="uuid" >
                 <constraints primaryKey="true"/>
             </column>
         </createTable>

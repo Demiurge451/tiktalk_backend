@@ -1,6 +1,6 @@
 services:
   client-backend:
-    image: client:0.0.1
+    image: app
     build:
       context: .
       dockerfile: Dockerfile

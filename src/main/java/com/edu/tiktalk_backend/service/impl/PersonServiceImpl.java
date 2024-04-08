@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.service.impl;
 
 
+import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.model.Person;
 import com.edu.tiktalk_backend.repository.PersonRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -21,24 +22,24 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
 
     @Override
     public List<Person> getListOfItems(PageRequest pageRequest) {
-        return null;
+        return personRepository.findAll(pageRequest).getContent();
     }
 
     @Override
-    public Person getById(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public void delete(UUID uuid) {
-
+    public Person getById(UUID id) {
+        return personRepository.findById(id).orElseThrow(() -> new NotFoundException("Person not found"));
     }
 
     @Override
     @Transactional
-    public void save(Person item) {
+    public void delete(UUID id) {
+        personRepository.delete(getById(id));
+    }
 
+    @Override
+    @Transactional
+    public void save(Person person) {
+        personRepository.save(person);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.service.impl;
 
+import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.repository.PodcastRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -18,22 +19,22 @@ public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
     private final PodcastRepository podcastRepository;
     @Override
     public List<Podcast> getListOfItems(PageRequest pageRequest) {
-        return null;
+        return podcastRepository.findAll(pageRequest).getContent();
     }
 
     @Override
-    public Podcast getById(UUID uuid) {
-        return null;
+    public Podcast getById(UUID id) {
+        return podcastRepository.findById(id).orElseThrow(() -> new NotFoundException("Podcast not found"));
     }
 
     @Override
-    public void delete(UUID uuid) {
-
+    public void delete(UUID id) {
+        podcastRepository.delete(getById(id));
     }
 
     @Override
-    public void save(Podcast item) {
-
+    public void save(Podcast podcast) {
+        podcastRepository.save(podcast);
     }
 
     @Override
