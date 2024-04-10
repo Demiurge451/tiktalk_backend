@@ -28,16 +28,19 @@ public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         podcastRepository.delete(getById(id));
     }
 
     @Override
+    @Transactional
     public void save(Podcast podcast) {
         podcastRepository.save(podcast);
     }
 
     @Override
+    @Transactional
     public Podcast update(UUID uuid, Podcast item) {
         return null;
     }

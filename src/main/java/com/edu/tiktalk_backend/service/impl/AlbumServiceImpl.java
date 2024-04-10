@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AlbumServiceImpl implements CrudService<Album, UUID> {
     private final AlbumRepository albumRepository;
 
