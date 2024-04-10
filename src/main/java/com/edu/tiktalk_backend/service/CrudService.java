@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.service;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

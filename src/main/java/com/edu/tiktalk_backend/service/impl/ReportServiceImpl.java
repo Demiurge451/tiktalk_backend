@@ -28,16 +28,19 @@ public class ReportServiceImpl implements CrudService<Report, UUID> {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         reportRepository.delete(getById(id));
     }
 
     @Override
+    @Transactional
     public void save(Report report) {
         reportRepository.save(report);
     }
 
     @Override
+    @Transactional
     public Report update(UUID uuid, Report item) {
         return null;
     }
