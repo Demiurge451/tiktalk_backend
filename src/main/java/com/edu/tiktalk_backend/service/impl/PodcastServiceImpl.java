@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.service.impl;
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
+import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.repository.PodcastRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -17,6 +18,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
     private final PodcastRepository podcastRepository;
+    private final PodcastMapper podcastMapper;
+
     @Override
     public List<Podcast> getListOfItems(PageRequest pageRequest) {
         return podcastRepository.findAll(pageRequest).getContent();
@@ -41,7 +44,9 @@ public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
 
     @Override
     @Transactional
-    public Podcast update(UUID uuid, Podcast item) {
-        return null;
+    public Podcast update(UUID id, Podcast item) {
+        Podcast podcast = getById(id);
+        podcastMapper.updatePodcast(item, podcast);
+        return podcastRepository.save(podcast);
     }
 }

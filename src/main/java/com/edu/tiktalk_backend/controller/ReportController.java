@@ -1,6 +1,8 @@
 package com.edu.tiktalk_backend.controller;
 
-import com.edu.tiktalk_backend.model.Podcast;
+import com.edu.tiktalk_backend.dto.request.ReportRequest;
+import com.edu.tiktalk_backend.dto.response.ReportResponse;
+import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.service.CrudService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,26 +17,29 @@ import java.util.UUID;
 @RequestMapping("/api/report")
 public class ReportController {
     private final CrudService<Report, UUID> reportService;
+    private final ReportMapper reportMapper;
 
-    public ReportController(@Qualifier("reportServiceImpl") CrudService<Report, UUID> reportService) {
+    public ReportController(@Qualifier("reportServiceImpl") CrudService<Report, UUID> reportService, ReportMapper reportMapper) {
         this.reportService = reportService;
+        this.reportMapper = reportMapper;
     }
 
     @GetMapping("/")
-    public List<Report> getReports(@RequestParam(required = false, defaultValue = "0") int page,
-                                   @RequestParam(required = false, defaultValue = "10") int size,
-                                   @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return reportService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)));
+    public List<ReportResponse> getReports(@RequestParam(required = false, defaultValue = "0") int page,
+                                           @RequestParam(required = false, defaultValue = "10") int size,
+                                           @RequestParam(required = false, defaultValue = "id") String sortParam) {
+        return reportService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+                .stream().map(reportMapper::mapItemToResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public Report getReport(@PathVariable UUID id) {
-        return reportService.getById(id);
+    public ReportResponse getReport(@PathVariable UUID id) {
+        return reportMapper.mapItemToResponse(reportService.getById(id));
     }
 
     @PostMapping("/")
-    public void createReport(@RequestBody Report report) {
-        reportService.save(report);
+    public void createReport(@RequestBody ReportRequest reportRequest) {
+        reportService.save(reportMapper.mapRequestToItem(reportRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +48,7 @@ public class ReportController {
     }
 
     @PutMapping("/{id}")
-    public Podcast updateReport(@PathVariable UUID id, @RequestBody Report report) {
-        return null;
+    public ReportResponse updateReport(@PathVariable UUID id, @RequestBody ReportRequest reportRequest) {
+        return reportMapper.mapItemToResponse(reportService.update(id, reportMapper.mapRequestToItem(reportRequest)));
     }
 }

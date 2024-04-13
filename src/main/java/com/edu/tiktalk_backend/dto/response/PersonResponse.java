@@ -12,8 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PersonResponse {
     private UUID id;
-    private List<PodcastResponse> podcasts;
+    private List<UUID> podcasts;
     private List<UUID> subscribers;
-    private List<PodcastResponse> likedPodcasts;
-    private List<ReportResponse> reports;
+    private List<UUID> likedPodcasts;
+    private List<UUID> reports;
 }
