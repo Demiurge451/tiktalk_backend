@@ -1,9 +1,6 @@
 package com.edu.tiktalk_backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -20,5 +17,14 @@ public class Report {
     private UUID id;
 
     private String theme;
+
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    @ManyToOne
+    @JoinColumn(name = "podcast_id")
+    private Podcast podcast;
 }
