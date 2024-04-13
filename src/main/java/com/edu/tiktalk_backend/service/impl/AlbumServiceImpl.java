@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.service.impl;
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
+import com.edu.tiktalk_backend.mapper.AlbumMapper;
 import com.edu.tiktalk_backend.model.Album;
 import com.edu.tiktalk_backend.repository.AlbumRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class AlbumServiceImpl implements CrudService<Album, UUID> {
     private final AlbumRepository albumRepository;
-
+    private final AlbumMapper albumMapper;
 
     @Override
     public List<Album> getListOfItems(PageRequest pageRequest) {
@@ -31,8 +32,8 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
 
     @Override
     @Transactional
-    public void delete(UUID uuid) {
-        albumRepository.delete(getById(uuid));
+    public void delete(UUID id) {
+        albumRepository.delete(getById(id));
     }
 
     @Override
@@ -43,7 +44,9 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
 
     @Override
     @Transactional
-    public Album update(UUID uuid, Album item) {
-        return null;
+    public Album update(UUID id, Album item) {
+        Album album = getById(id);
+        albumMapper.updateAlbum(item, album);
+        return albumRepository.save(album);
     }
 }

@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.model;
 
+import com.edu.tiktalk_backend.model.id_container.IdContainer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Person extends IdContainer<UUID> {
     @ManyToMany
     @JoinTable(
             name = "subscribers",

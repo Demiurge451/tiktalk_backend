@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.model;
 
+import com.edu.tiktalk_backend.model.id_container.IdContainer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Podcast {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Podcast extends IdContainer<UUID> {
     private String name;
 
     private String description;

@@ -1,6 +1,8 @@
 package com.edu.tiktalk_backend.controller;
 
-import com.edu.tiktalk_backend.model.Person;
+import com.edu.tiktalk_backend.dto.request.PodcastRequest;
+import com.edu.tiktalk_backend.dto.response.PodcastResponse;
+import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.service.CrudService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,26 +17,29 @@ import java.util.UUID;
 @RequestMapping("/api/podcast")
 public class PodcastController {
     private final CrudService<Podcast, UUID> podcastService;
+    private final PodcastMapper podcastMapper;
 
-    public PodcastController(@Qualifier("podcastServiceImpl") CrudService<Podcast, UUID> podcastService) {
+    public PodcastController(@Qualifier("podcastServiceImpl") CrudService<Podcast, UUID> podcastService, PodcastMapper podcastMapper) {
         this.podcastService = podcastService;
+        this.podcastMapper = podcastMapper;
     }
 
     @GetMapping("/")
-    public List<Podcast> getPodcasts(@RequestParam(required = false, defaultValue = "0") int page,
+    public List<PodcastResponse> getPodcasts(@RequestParam(required = false, defaultValue = "0") int page,
                                      @RequestParam(required = false, defaultValue = "10") int size,
                                      @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return podcastService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)));
+        return podcastService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+                .stream().map(podcastMapper::mapItemToResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public Podcast getPodcast(@PathVariable UUID id) {
-        return podcastService.getById(id);
+    public PodcastResponse getPodcast(@PathVariable UUID id) {
+        return podcastMapper.mapItemToResponse(podcastService.getById(id));
     }
 
     @PostMapping("/")
-    public void createPodcast(@RequestBody Podcast podcast) {
-        podcastService.save(podcast);
+    public void createPodcast(@RequestBody PodcastRequest podcastRequest) {
+        podcastService.save(podcastMapper.mapRequestToItem(podcastRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +48,7 @@ public class PodcastController {
     }
 
     @PutMapping("/{id}")
-    public Podcast updatePodcast(@PathVariable UUID id, @RequestBody Podcast podcast) {
-        return null;
+    public PodcastResponse updatePodcast(@PathVariable UUID id, @RequestBody PodcastRequest podcastRequest) {
+        return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
     }
 }

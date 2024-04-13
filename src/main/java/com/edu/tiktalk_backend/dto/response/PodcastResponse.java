@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.dto.response;
 
-import com.edu.tiktalk_backend.model.Person;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +16,6 @@ public class PodcastResponse {
     private String description;
     private UUID personId;
     private UUID albumId;
-    private List<ReportResponse> reports;
+    private List<UUID> reports;
     private List<UUID> likedPersons;
 }
