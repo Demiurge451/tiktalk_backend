@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Album extends IdContainer<UUID> {
-    private String name;
+    private String title;
 
     private String description;
 

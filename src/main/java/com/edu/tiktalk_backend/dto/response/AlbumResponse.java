@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 public class AlbumResponse {
     private UUID id;
-    private String name;
+    private String title;
     private String description;
     private List<UUID> podcasts;
 }

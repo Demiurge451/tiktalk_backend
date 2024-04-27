@@ -16,7 +16,7 @@ create table subscribers (
 
 create table album (
     id uuid primary key default uuid_generate_v4(),
-    name varchar(50) not null,
+    title varchar(50) not null,
     description varchar(255)
 );
 
