@@ -21,7 +21,7 @@ public class ReportServiceImpl implements CrudService<Report, UUID> {
     private final ReportMapper reportMapper;
 
     @Override
-    public List<Report> getListOfItems(PageRequest pageRequest) {
+    public List<Report> getAll(PageRequest pageRequest) {
         return reportRepository.findAll(pageRequest).getContent();
     }
 

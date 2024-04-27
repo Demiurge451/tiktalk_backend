@@ -6,12 +6,12 @@ create table person (
     id uuid primary key default uuid_generate_v4()
 );
 
-create table subscribers (
+create table subscriptions (
     person_id uuid not null,
-    subscriber_id uuid not null,
+    author_id uuid not null,
     foreign key (person_id) references person(id),
-    foreign key (subscriber_id) references person(id),
-    primary key (person_id, subscriber_id)
+    foreign key (author_id) references person(id),
+    primary key (person_id, author_id)
 );
 
 create table album (

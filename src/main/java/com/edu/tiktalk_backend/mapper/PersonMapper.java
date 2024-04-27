@@ -34,7 +34,7 @@ public abstract class PersonMapper {
     public abstract Person mapRequestToItem(PersonRequest personRequest);
 
     @Mapping(target = "podcasts", expression = "java(idMapperPodcast.mapItemToId(person.getPodcasts()))")
-    @Mapping(target = "subscribers", expression = "java(idMapperPerson.mapItemToId(person.getSubscribers()))")
+    @Mapping(target = "subscriptions", expression = "java(idMapperPerson.mapItemToId(person.getSubscriptions()))")
     @Mapping(target = "likedPodcasts", expression = "java(idMapperPodcast.mapItemToId(person.getLikedPodcasts()))")
     @Mapping(target = "reports", expression = "java(idMapperReport.mapItemToId(person.getReports()))")
     public abstract PersonResponse mapItemToResponse(Person person);

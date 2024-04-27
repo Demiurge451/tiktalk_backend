@@ -21,8 +21,8 @@ public abstract class ReportMapper {
     protected CrudService<Podcast, UUID> podcastService;
 
     @Autowired
-    protected void setReportMapper(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService,
-                                    @Qualifier("podcastServiceImpl") CrudService<Podcast, UUID> podcastService) {
+    protected void setReportMapper(CrudService<Person, UUID> personService,
+                                   CrudService<Podcast, UUID> podcastService) {
         this.personService = personService;
         this.podcastService = podcastService;
     }

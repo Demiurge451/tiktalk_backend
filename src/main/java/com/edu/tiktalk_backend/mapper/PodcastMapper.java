@@ -24,8 +24,8 @@ public abstract class PodcastMapper {
     protected CrudService<Album, UUID> albumService;
 
     @Autowired
-    protected void setPodcastMapper(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService,
-                                        @Qualifier("albumServiceImpl") CrudService<Album, UUID> albumService,
+    protected void setPodcastMapper(CrudService<Person, UUID> personService,
+                                    CrudService<Album, UUID> albumService,
                                     IdMapper<Person, UUID> idMapperPerson,
                                     IdMapper<Report, UUID> idMapperReport
     ) {
