@@ -21,7 +21,7 @@ public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
     private final PodcastMapper podcastMapper;
 
     @Override
-    public List<Podcast> getListOfItems(PageRequest pageRequest) {
+    public List<Podcast> getAll(PageRequest pageRequest) {
         return podcastRepository.findAll(pageRequest).getContent();
     }
 

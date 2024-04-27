@@ -20,6 +20,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<AppError> catchException(Exception e) {
-        return new ResponseEntity<>(new AppError(HttpStatusCode.valueOf(500).value(), e.getMessage()), HttpStatusCode.valueOf(500));
+        return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatusCode.valueOf(500));
     }
 }

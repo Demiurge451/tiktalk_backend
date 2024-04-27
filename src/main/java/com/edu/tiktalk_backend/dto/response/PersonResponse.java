@@ -13,7 +13,7 @@ import java.util.UUID;
 public class PersonResponse {
     private UUID id;
     private List<UUID> podcasts;
-    private List<UUID> subscribers;
+    private List<UUID> subscriptions;
     private List<UUID> likedPodcasts;
     private List<UUID> reports;
 }
