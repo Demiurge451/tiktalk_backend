@@ -16,11 +16,11 @@ import java.util.UUID;
 public class Person extends IdContainer<UUID> {
     @ManyToMany
     @JoinTable(
-            name = "subscribers",
+            name = "subscriptions",
             joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+            inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private List<Person> subscribers;
+    private List<Person> subscriptions;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Podcast> podcasts;

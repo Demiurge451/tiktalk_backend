@@ -22,7 +22,7 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
     private final PersonMapper personMapper;
 
     @Override
-    public List<Person> getListOfItems(PageRequest pageRequest) {
+    public List<Person> getAll(PageRequest pageRequest) {
         return personRepository.findAll(pageRequest).getContent();
     }
 
@@ -49,5 +49,15 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
         Person person = getById(id);
         personMapper.updatePerson(item, person);
         return personRepository.save(person);
+    }
+
+    @Transactional
+    public void follow(UUID personId, UUID authorId) {
+        personRepository.follow(personId, authorId);
+    }
+
+    @Transactional
+    public void like(UUID personId, UUID podcastId) {
+        personRepository.like(personId, podcastId);
     }
 }

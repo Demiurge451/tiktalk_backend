@@ -5,7 +5,7 @@ import com.edu.tiktalk_backend.dto.response.PersonResponse;
 import com.edu.tiktalk_backend.mapper.PersonMapper;
 import com.edu.tiktalk_backend.model.Person;
 import com.edu.tiktalk_backend.service.CrudService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.edu.tiktalk_backend.service.impl.PersonServiceImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/person")
 public class PersonController {
-    private final CrudService<Person, UUID> personService;
+    private final PersonServiceImpl personService;
     private final PersonMapper personMapper;
 
-    public PersonController(@Qualifier("personServiceImpl") CrudService<Person, UUID> personService, PersonMapper personMapper) {
+    public PersonController(PersonServiceImpl personService, PersonMapper personMapper) {
         this.personService = personService;
         this.personMapper = personMapper;
     }
@@ -28,7 +28,7 @@ public class PersonController {
     public List<PersonResponse> getPersons(@RequestParam(required = false, defaultValue = "0") int page,
                                            @RequestParam(required = false, defaultValue = "10") int size,
                                            @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return personService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+        return personService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
                 .stream().map(personMapper::mapItemToResponse).toList();
     }
 
@@ -50,5 +50,15 @@ public class PersonController {
     @PutMapping("/{id}")
     public PersonResponse updatePerson(@PathVariable UUID id, @RequestBody PersonRequest personRequest) {
         return personMapper.mapItemToResponse(personService.update(id, personMapper.mapRequestToItem(personRequest)));
+    }
+
+    @PostMapping("/like/{personId}/{podcastId}")
+    public void likePodcast(@PathVariable UUID personId, @PathVariable UUID podcastId) {
+        personService.like(personId, podcastId);
+    }
+
+    @PostMapping("/follow/{personId}/{authorId}")
+    public void followPerson(@PathVariable UUID personId, @PathVariable UUID authorId) {
+        personService.follow(personId, authorId);
     }
 }

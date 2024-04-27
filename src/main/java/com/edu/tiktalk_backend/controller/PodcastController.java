@@ -5,6 +5,7 @@ import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.service.CrudService;
+
 import com.edu.tiktalk_backend.service.impl.PodcastServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,7 @@ public class PodcastController {
     public List<PodcastResponse> getPodcasts(@RequestParam(required = false, defaultValue = "0") int page,
                                      @RequestParam(required = false, defaultValue = "10") int size,
                                      @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return podcastService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+        return podcastService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
                 .stream().map(podcastMapper::mapItemToResponse).toList();
     }
 
