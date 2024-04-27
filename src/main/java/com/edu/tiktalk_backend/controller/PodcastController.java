@@ -5,6 +5,9 @@ import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.service.CrudService;
+
+import com.edu.tiktalk_backend.service.impl.PodcastServiceImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +18,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/podcast")
 public class PodcastController {
-    private final CrudService<Podcast, UUID> podcastService;
+    private final PodcastServiceImpl podcastService;
     private final PodcastMapper podcastMapper;
 
-    public PodcastController(CrudService<Podcast, UUID> podcastService, PodcastMapper podcastMapper) {
+    public PodcastController(PodcastServiceImpl podcastService, PodcastMapper podcastMapper) {
         this.podcastService = podcastService;
         this.podcastMapper = podcastMapper;
     }
@@ -49,5 +52,10 @@ public class PodcastController {
     @PutMapping("/{id}")
     public PodcastResponse updatePodcast(@PathVariable UUID id, @RequestBody PodcastRequest podcastRequest) {
         return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
+    }
+
+    @GetMapping("/search/{name}")
+    public List<PodcastResponse> searchPodcasts(@PathVariable String name) {
+        return podcastService.findByName(name).stream().map(podcastMapper::mapItemToResponse).toList();
     }
 }

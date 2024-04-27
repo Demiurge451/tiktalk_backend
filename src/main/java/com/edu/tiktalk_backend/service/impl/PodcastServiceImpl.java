@@ -49,4 +49,8 @@ public class PodcastServiceImpl implements CrudService<Podcast, UUID> {
         podcastMapper.updatePodcast(item, podcast);
         return podcastRepository.save(podcast);
     }
+
+    public List<Podcast> findByName(String name) {
+        return podcastRepository.findAllByNameLikeIgnoreCase("%" + name + "%");
+    }
 }

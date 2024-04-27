@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AlbumRequest {
-    private String name;
+    private String title;
     private String description;
 }
