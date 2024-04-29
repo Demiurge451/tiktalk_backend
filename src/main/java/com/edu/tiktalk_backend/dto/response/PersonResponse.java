@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.dto.response;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

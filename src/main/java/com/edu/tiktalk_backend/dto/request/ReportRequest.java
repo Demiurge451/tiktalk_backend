@@ -14,10 +14,10 @@ import java.util.UUID;
 @Builder
 public class ReportRequest {
     @NotBlank
-    @Size(max = 55)
+    @Size(min = 1, max = 55)
     private String theme;
 
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String description;
 
     @NotNull

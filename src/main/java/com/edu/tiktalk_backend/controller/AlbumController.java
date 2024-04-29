@@ -31,7 +31,7 @@ public class AlbumController {
     @GetMapping("/")
     public @Valid List<AlbumResponse> getAlbums(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                 @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-                                                @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(max = 50) String sortParam) {
+                                                @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(min = 1, max = 50) String sortParam) {
         return albumMapper.mapItemsToResponses(
                 albumService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
         );

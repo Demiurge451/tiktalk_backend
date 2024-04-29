@@ -11,9 +11,9 @@ import lombok.*;
 @Builder
 public class AlbumRequest {
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 1, max = 50)
     private String title;
 
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String description;
 }

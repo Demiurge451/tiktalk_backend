@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.dto.response;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,10 +19,10 @@ public class PodcastResponse {
     private UUID id;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 1, max = 50)
     private String name;
 
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String description;
 
     @NotNull
@@ -32,4 +33,7 @@ public class PodcastResponse {
 
     private List<UUID> reports;
     private List<UUID> likedPersons;
+
+    @Min(0)
+    public int likes;
 }

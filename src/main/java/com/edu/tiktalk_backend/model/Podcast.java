@@ -31,4 +31,12 @@ public class Podcast extends IdContainer<UUID> {
 
     @ManyToMany(mappedBy = "likedPodcasts", cascade = CascadeType.ALL)
     private List<Person> likedPersons;
+
+
+    @Transient
+    private int likes;
+
+    public int getLikes() {
+        return likedPersons.size();
+    }
 }

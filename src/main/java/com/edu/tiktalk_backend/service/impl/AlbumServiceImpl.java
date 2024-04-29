@@ -21,7 +21,7 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
     private final AlbumMapper albumMapper;
 
     @Override
-    public List<Album> getListOfItems(PageRequest pageRequest) {
+    public List<Album> getAll(PageRequest pageRequest) {
         return albumRepository.findAll(pageRequest).getContent();
     }
 
