@@ -13,6 +13,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -34,6 +35,8 @@ public abstract class ReportMapper {
     @Mapping(target = "personId", source = "report.person.id")
     @Mapping(target = "podcastId", source = "report.podcast.id")
     public abstract ReportResponse mapItemToResponse(Report report);
+
+    public abstract List<ReportResponse> mapItemsToResponses(List<Report> reports);
 
     public abstract void updateReport(Report source, @MappingTarget Report target);
 }

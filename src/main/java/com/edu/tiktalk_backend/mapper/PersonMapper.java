@@ -14,6 +14,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -38,6 +39,8 @@ public abstract class PersonMapper {
     @Mapping(target = "likedPodcasts", expression = "java(idMapperPodcast.mapItemToId(person.getLikedPodcasts()))")
     @Mapping(target = "reports", expression = "java(idMapperReport.mapItemToId(person.getReports()))")
     public abstract PersonResponse mapItemToResponse(Person person);
+
+    public abstract List<PersonResponse> mapItemsToResponses(List<Person> persons);
 
     public abstract void updatePerson(Person source, @MappingTarget Person target);
 }

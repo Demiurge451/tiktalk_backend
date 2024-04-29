@@ -14,6 +14,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -45,6 +46,8 @@ public abstract class PodcastMapper {
     @Mapping(target = "personId", source = "podcast.person.id")
     @Mapping(target = "albumId", source = "podcast.album.id")
     public abstract PodcastResponse mapItemToResponse(Podcast podcast);
+
+    public abstract List<PodcastResponse> mapItemsToResponses(List<Podcast> podcasts);
 
     public abstract void updatePodcast(Podcast source, @MappingTarget Podcast target);
 }
