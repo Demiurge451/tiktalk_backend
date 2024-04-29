@@ -11,7 +11,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -26,6 +28,8 @@ public abstract class AlbumMapper {
 
     @Mapping(target = "podcasts", expression = "java(idMapper.mapItemToId(album.getPodcasts()))")
     public abstract AlbumResponse mapItemToResponse(Album album);
+
+    public abstract List<AlbumResponse> mapItemsToResponses(List<Album> albums);
 
     public abstract void updateAlbum(Album source, @MappingTarget Album target);
 }
