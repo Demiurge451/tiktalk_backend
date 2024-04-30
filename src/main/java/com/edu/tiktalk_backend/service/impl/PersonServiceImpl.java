@@ -2,6 +2,7 @@ package com.edu.tiktalk_backend.service.impl;
 
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
+import com.edu.tiktalk_backend.mapper.PersonMapper;
 import com.edu.tiktalk_backend.model.Person;
 import com.edu.tiktalk_backend.repository.PersonRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -18,10 +19,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements CrudService<Person, UUID> {
     private final PersonRepository personRepository;
-
+    private final PersonMapper personMapper;
 
     @Override
-    public List<Person> getListOfItems(PageRequest pageRequest) {
+    public List<Person> getAll(PageRequest pageRequest) {
         return personRepository.findAll(pageRequest).getContent();
     }
 
@@ -44,7 +45,19 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
 
     @Override
     @Transactional
-    public Person update(UUID uuid, Person item) {
-        return null;
+    public Person update(UUID id, Person item) {
+        Person person = getById(id);
+        personMapper.updatePerson(item, person);
+        return personRepository.save(person);
+    }
+
+    @Transactional
+    public void follow(UUID personId, UUID authorId) {
+        personRepository.follow(personId, authorId);
+    }
+
+    @Transactional
+    public void like(UUID personId, UUID podcastId) {
+        personRepository.like(personId, podcastId);
     }
 }

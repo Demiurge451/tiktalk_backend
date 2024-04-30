@@ -1,9 +1,7 @@
 package com.edu.tiktalk_backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.edu.tiktalk_backend.model.id_container.IdContainer;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -14,11 +12,16 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Report {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Report extends IdContainer<UUID> {
     private String theme;
+
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    @ManyToOne
+    @JoinColumn(name = "podcast_id")
+    private Podcast podcast;
 }

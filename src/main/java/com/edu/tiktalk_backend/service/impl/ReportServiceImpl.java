@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.service.impl;
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
+import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.repository.ReportRepository;
 import com.edu.tiktalk_backend.service.CrudService;
@@ -17,8 +18,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements CrudService<Report, UUID> {
     private final ReportRepository reportRepository;
+    private final ReportMapper reportMapper;
+
     @Override
-    public List<Report> getListOfItems(PageRequest pageRequest) {
+    public List<Report> getAll(PageRequest pageRequest) {
         return reportRepository.findAll(pageRequest).getContent();
     }
 
@@ -41,7 +44,9 @@ public class ReportServiceImpl implements CrudService<Report, UUID> {
 
     @Override
     @Transactional
-    public Report update(UUID uuid, Report item) {
-        return null;
+    public Report update(UUID id, Report item) {
+        Report report = getById(id);
+        reportMapper.updateReport(item, report);
+        return reportRepository.save(report);
     }
 }

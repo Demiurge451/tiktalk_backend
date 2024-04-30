@@ -1,11 +1,10 @@
 package com.edu.tiktalk_backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.edu.tiktalk_backend.model.id_container.IdContainer;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,11 +13,30 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Podcast {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
+public class Podcast extends IdContainer<UUID> {
     private String name;
+
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
+
+    @OneToMany(mappedBy = "podcast", cascade = CascadeType.ALL)
+    private List<Report> reports;
+
+    @ManyToMany(mappedBy = "likedPodcasts", cascade = CascadeType.ALL)
+    private List<Person> likedPersons;
+
+
+    @Transient
+    private int likes;
+
+    public int getLikes() {
+        return likedPersons.size();
+    }
 }

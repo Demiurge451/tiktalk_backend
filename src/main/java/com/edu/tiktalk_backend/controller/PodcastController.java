@@ -1,49 +1,61 @@
 package com.edu.tiktalk_backend.controller;
 
-import com.edu.tiktalk_backend.model.Person;
+import com.edu.tiktalk_backend.dto.request.PodcastRequest;
+import com.edu.tiktalk_backend.dto.response.PodcastResponse;
+import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.service.CrudService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import com.edu.tiktalk_backend.service.impl.PodcastServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @RestController
 @RequestMapping("/api/podcast")
 public class PodcastController {
     private final CrudService<Podcast, UUID> podcastService;
+    private final PodcastMapper podcastMapper;
 
-    public PodcastController(@Qualifier("podcastServiceImpl") CrudService<Podcast, UUID> podcastService) {
+    public PodcastController(PodcastServiceImpl podcastService, PodcastMapper podcastMapper) {
         this.podcastService = podcastService;
+        this.podcastMapper = podcastMapper;
     }
 
     @GetMapping("/")
-    public List<Podcast> getPodcasts(@RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "10") int size,
-                                     @RequestParam(required = false, defaultValue = "id") String sortParam) {
-        return podcastService.getListOfItems(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)));
+    public @Valid List<PodcastResponse> getPodcasts(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
+                                                    @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
+                                                    @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(max = 50) String sortParam)  {
+        return podcastMapper.mapItemsToResponses(
+                podcastService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+        );
     }
 
     @GetMapping("/{id}")
-    public Podcast getPodcast(@PathVariable UUID id) {
-        return podcastService.getById(id);
+    public PodcastResponse getPodcast(@PathVariable @NotNull UUID id) {
+        return podcastMapper.mapItemToResponse(podcastService.getById(id));
     }
 
     @PostMapping("/")
-    public void createPodcast(@RequestBody Podcast podcast) {
-        podcastService.save(podcast);
+    public void createPodcast(@Valid @RequestBody PodcastRequest podcastRequest) {
+        podcastService.save(podcastMapper.mapRequestToItem(podcastRequest));
     }
 
     @DeleteMapping("/{id}")
-    public void deletePodcast(@PathVariable UUID id) {
+    public void deletePodcast(@PathVariable @NotNull UUID id) {
         podcastService.delete(id);
     }
 
     @PutMapping("/{id}")
-    public Podcast updatePodcast(@PathVariable UUID id, @RequestBody Podcast podcast) {
-        return null;
+    public @Valid PodcastResponse updatePodcast(@PathVariable @NotNull UUID id, @Valid @RequestBody PodcastRequest podcastRequest) {
+        return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
     }
 }
