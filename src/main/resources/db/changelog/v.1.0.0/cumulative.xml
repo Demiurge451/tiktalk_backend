@@ -8,7 +8,9 @@
         <sqlFile path="init.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+
     <changeSet id="2" author="konstantin">
         <sqlFile path="add_foreign_keys.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
 </databaseChangeLog>
