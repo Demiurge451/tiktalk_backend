@@ -4,8 +4,10 @@ package com.edu.tiktalk_backend.service.impl;
 import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.PersonMapper;
 import com.edu.tiktalk_backend.model.Person;
+import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.repository.PersonRepository;
 import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,10 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PersonServiceImpl implements CrudService<Person, UUID> {
-    private final PersonRepository personRepository;
-    private final PersonMapper personMapper;
+public class PersonServiceImpl implements PersonService {
+    protected final PersonRepository personRepository;
+    protected final PersonMapper personMapper;
+    private final CrudService<Podcast, UUID> podcastService;
 
     @Override
     public List<Person> getAll(PageRequest pageRequest) {
@@ -51,13 +54,38 @@ public class PersonServiceImpl implements CrudService<Person, UUID> {
         return personRepository.save(person);
     }
 
+    @Override
     @Transactional
     public void follow(UUID personId, UUID authorId) {
         personRepository.follow(personId, authorId);
     }
 
+    @Override
     @Transactional
     public void like(UUID personId, UUID podcastId) {
         personRepository.like(personId, podcastId);
+        Podcast podcast = podcastService.getById(podcastId);
+        podcast.setLikes(podcast.getLikes() + 1);
+        podcastService.update(podcastId, podcast);
+    }
+
+    @Override
+    @Transactional
+    public void unlike(UUID personId, UUID podcastId) {
+        personRepository.unlike(personId, podcastId);
+        Podcast podcast = podcastService.getById(podcastId);
+        podcast.setLikes(podcast.getLikes() - 1);
+        podcastService.update(podcastId, podcast);
+    }
+
+    @Override
+    @Transactional
+    public void unfollow(UUID followerId, UUID authorId) {
+        personRepository.unfollow(followerId, authorId);
+    }
+
+    @Override
+    public void report(UUID reporterId, UUID podcastId) {
+
     }
 }

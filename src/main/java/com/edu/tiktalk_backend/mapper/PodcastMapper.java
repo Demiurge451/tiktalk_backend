@@ -21,24 +21,17 @@ import java.util.UUID;
 public abstract class PodcastMapper {
     protected IdMapper<Person, UUID> idMapperPerson;
     protected IdMapper<Report, UUID> idMapperReport;
-    protected CrudService<Person, UUID> personService;
-    protected CrudService<Album, UUID> albumService;
 
     @Autowired
-    protected void setPodcastMapper(CrudService<Person, UUID> personService,
-                                    CrudService<Album, UUID> albumService,
+    protected void setPodcastMapper(
                                     IdMapper<Person, UUID> idMapperPerson,
                                     IdMapper<Report, UUID> idMapperReport
     ) {
-        this.personService = personService;
-        this.albumService = albumService;
         this.idMapperPerson = idMapperPerson;
         this.idMapperReport = idMapperReport;
     }
 
 
-    @Mapping(target = "person", expression = "java(personService.getById(podcastRequest.getPersonId()))")
-    @Mapping(target = "album", expression = "java(albumService.getById(podcastRequest.getAlbumId()))")
     public abstract Podcast mapRequestToItem(PodcastRequest podcastRequest);
 
     @Mapping(target = "likedPersons", expression = "java(idMapperPerson.mapItemToId(podcast.getLikedPersons()))")

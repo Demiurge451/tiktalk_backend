@@ -36,4 +36,7 @@ public class PodcastResponse {
 
     @Min(0)
     public int likes;
+
+    @Min(0)
+    public int reportsCount;
 }

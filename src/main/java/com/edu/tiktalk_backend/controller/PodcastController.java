@@ -5,6 +5,7 @@ import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.sort_enum.PodcastSort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
@@ -22,7 +23,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/podcast")
 public class PodcastController {
-    private final CrudService<Podcast, UUID> podcastService;
+    private final PodcastServiceImpl podcastService;
     private final PodcastMapper podcastMapper;
 
     public PodcastController(PodcastServiceImpl podcastService, PodcastMapper podcastMapper) {
@@ -33,9 +34,9 @@ public class PodcastController {
     @GetMapping("/")
     public @Valid List<PodcastResponse> getPodcasts(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                     @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-                                                    @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(max = 50) String sortParam)  {
+                                                    @RequestParam(required = false, defaultValue = "ID_ASC") PodcastSort sortParam)  {
         return podcastMapper.mapItemsToResponses(
-                podcastService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+                podcastService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
         );
     }
 
@@ -57,5 +58,10 @@ public class PodcastController {
     @PutMapping("/{id}")
     public @Valid PodcastResponse updatePodcast(@PathVariable @NotNull UUID id, @Valid @RequestBody PodcastRequest podcastRequest) {
         return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
+    }
+
+    @GetMapping("/search/{name}")
+    public @Valid List<PodcastResponse> searchPodcasts(@PathVariable @NotNull String name) {
+        return podcastService.findByName(name).stream().map(podcastMapper::mapItemToResponse).toList();
     }
 }
