@@ -1,6 +1,6 @@
 "drop all tables in database"
-liquibase --changeLogFile=db.changelog-master.xml --url=jdbc:postgresql://localhost:6432/tiktalk_db --username username --password password dropAll;
 
+liquibase --changeLogFile=db.changelog-master.xml --url=jdbc:postgresql://localhost:6432/tiktalk_db --username username --password password dropAll;
 
 "run container with postgres in docker"
 docker run --name tiktalk -e POSTGRES_USER=username -e POSTGRES_PASSWORD=password -d -p 6432:5432 postgres:16;
