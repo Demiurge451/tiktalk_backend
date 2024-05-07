@@ -18,18 +18,6 @@ import java.util.UUID;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public abstract class ReportMapper {
-    protected CrudService<Person, UUID> personService;
-    protected CrudService<Podcast, UUID> podcastService;
-
-    @Autowired
-    protected void setReportMapper(CrudService<Person, UUID> personService,
-                                   CrudService<Podcast, UUID> podcastService) {
-        this.personService = personService;
-        this.podcastService = podcastService;
-    }
-
-    @Mapping(target = "person", expression = "java(personService.getById(reportRequest.getPersonId()))")
-    @Mapping(target = "podcast", expression = "java(podcastService.getById(reportRequest.getPodcastId()))")
     public abstract Report mapRequestToItem(ReportRequest reportRequest);
 
     @Mapping(target = "personId", source = "report.person.id")
@@ -37,6 +25,4 @@ public abstract class ReportMapper {
     public abstract ReportResponse mapItemToResponse(Report report);
 
     public abstract List<ReportResponse> mapItemsToResponses(List<Report> reports);
-
-    public abstract void updateReport(Report source, @MappingTarget Report target);
 }

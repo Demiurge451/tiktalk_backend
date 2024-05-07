@@ -5,6 +5,8 @@ import com.edu.tiktalk_backend.dto.response.ReportResponse;
 import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.service.ReportService;
+import com.edu.tiktalk_backend.sort_enum.ReportSort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.query.Page;
@@ -21,10 +23,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/report")
 public class ReportController {
-    private final CrudService<Report, UUID> reportService;
+    private final ReportService reportService;
     private final ReportMapper reportMapper;
 
-    public ReportController(CrudService<Report, UUID> reportService, ReportMapper reportMapper) {
+    public ReportController(ReportService reportService, ReportMapper reportMapper) {
         this.reportService = reportService;
         this.reportMapper = reportMapper;
     }
@@ -32,9 +34,9 @@ public class ReportController {
     @GetMapping("/")
     public @Valid List<ReportResponse> getReports(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                   @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-                                                  @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(max = 50) String sortParam)  {
+                                                  @RequestParam(required = false, defaultValue = "ID_ASC") ReportSort sortParam)  {
         return reportMapper.mapItemsToResponses(
-                reportService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+                reportService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
         );
     }
 
@@ -46,15 +48,5 @@ public class ReportController {
     @PostMapping("/")
     public void createReport(@Valid @RequestBody ReportRequest reportRequest) {
         reportService.save(reportMapper.mapRequestToItem(reportRequest));
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteReport(@PathVariable @NotNull UUID id) {
-        reportService.delete(id);
-    }
-
-    @PutMapping("/{id}")
-    public @Valid ReportResponse updateReport(@PathVariable @NotNull UUID id, @Valid @RequestBody ReportRequest reportRequest) {
-        return reportMapper.mapItemToResponse(reportService.update(id, reportMapper.mapRequestToItem(reportRequest)));
     }
 }

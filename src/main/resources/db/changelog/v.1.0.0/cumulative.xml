@@ -6,9 +6,25 @@
 
     <changeSet id="1" author="konstantin">
         <sqlFile path="init.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropTable tableName="person"/>
+            <dropTable tableName="album"/>
+            <dropTable tableName="podcast"/>
+            <dropTable tableName="report"/>
+        </rollback>
     </changeSet>
+
+
 
     <changeSet id="2" author="konstantin">
         <sqlFile path="add_foreign_keys.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropTable tableName="person"/>
+            <dropTable tableName="album"/>
+            <dropTable tableName="podcast"/>
+            <dropTable tableName="report"/>
+            <dropTable tableName="subscriptions"/>
+            <dropTable tableName="liked_podcasts"/>
+        </rollback>
     </changeSet>
 </databaseChangeLog>

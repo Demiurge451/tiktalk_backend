@@ -5,6 +5,7 @@ import com.edu.tiktalk_backend.dto.response.AlbumResponse;
 import com.edu.tiktalk_backend.mapper.AlbumMapper;
 import com.edu.tiktalk_backend.model.Album;
 import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.sort_enum.AlbumSort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,9 +32,9 @@ public class AlbumController {
     @GetMapping("/")
     public @Valid List<AlbumResponse> getAlbums(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                 @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-                                                @RequestParam(required = false, defaultValue = "id") @NotBlank @Size(min = 1, max = 50) String sortParam) {
+                                                @RequestParam(required = false, defaultValue = "ID_ASC") AlbumSort sortParam) {
         return albumMapper.mapItemsToResponses(
-                albumService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sortParam)))
+                albumService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
         );
     }
 
