@@ -72,6 +72,18 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>7.0.2.Final</version>
 		</dependency>
+
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.24.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
