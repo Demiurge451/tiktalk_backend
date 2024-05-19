@@ -42,9 +42,9 @@ create table report (
     id uuid primary key default uuid_generate_v4(),
     theme varchar(50) not null,
     description varchar(255),
-    person_id uuid not null,
+    reporter_id uuid not null,
     podcast_id uuid not null,
-    foreign key (person_id) references person(id),
+    foreign key (reporter_id) references person(id),
     foreign key (podcast_id) references podcast(id)
 );
 

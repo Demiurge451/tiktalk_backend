@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface ReportService {
     List<Report> getAll(PageRequest pageRequest);
     Report getById(UUID id);
-    void save(Report item);
+    Report save(Report item);
 }

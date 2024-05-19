@@ -24,3 +24,9 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+
+minio:
+  host: "http://127.0.0.1:9000"
+  download-host: "http:/localhost:9000"
+  user: root
+  password: password

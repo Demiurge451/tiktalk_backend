@@ -8,10 +8,12 @@ import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.repository.PersonRepository;
 import com.edu.tiktalk_backend.service.CrudService;
 import com.edu.tiktalk_backend.service.PersonService;
+import com.edu.tiktalk_backend.service.enums.BucketEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +24,8 @@ import java.util.UUID;
 public class PersonServiceImpl implements PersonService {
     protected final PersonRepository personRepository;
     protected final PersonMapper personMapper;
-    private final CrudService<Podcast, UUID> podcastService;
+    private final PodcastServiceImpl podcastService;
+    private final DownloadService downloadService;
 
     @Override
     public List<Person> getAll(PageRequest pageRequest) {
@@ -42,8 +45,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void save(Person person) {
-        personRepository.save(person);
+    public Person save(Person person, MultipartFile image) {
+        person.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
+        return personRepository.save(person);
     }
 
     @Override
@@ -82,10 +86,5 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public void unfollow(UUID followerId, UUID authorId) {
         personRepository.unfollow(followerId, authorId);
-    }
-
-    @Override
-    public void report(UUID reporterId, UUID podcastId) {
-
     }
 }
