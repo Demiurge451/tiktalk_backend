@@ -8,6 +8,6 @@ public interface CrudService <T, ID> {
     List<T> getAll(PageRequest pageRequest);
     T getById(ID id);
     void delete(ID id);
-    void save(T item);
+    T save(T item);
     T update(ID id, T item);
 }

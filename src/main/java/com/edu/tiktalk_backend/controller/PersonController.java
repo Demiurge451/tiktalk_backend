@@ -6,11 +6,14 @@ import com.edu.tiktalk_backend.mapper.PersonMapper;
 import com.edu.tiktalk_backend.service.PersonService;
 import com.edu.tiktalk_backend.service.impl.PersonServiceImpl;
 import com.edu.tiktalk_backend.sort_enum.PersonSort;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +30,7 @@ public class PersonController {
         this.personMapper = personMapper;
     }
 
+    @Operation(summary = "Получить всех людей")
     @GetMapping("/")
     public @Valid List<PersonResponse> getPersons(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                   @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
@@ -36,41 +40,52 @@ public class PersonController {
         );
     }
 
+    @Operation(summary = "Получить все человека")
     @GetMapping("/{id}")
     public @Valid PersonResponse getPerson(@PathVariable @NotNull UUID id) {
         return personMapper.mapItemToResponse(personService.getById(id));
     }
 
-    @PostMapping("/")
-    public void createPerson(@Valid @RequestBody PersonRequest personRequest) {
-        personService.save(personMapper.mapRequestToItem(personRequest));
+    @Operation(summary = "Создать человека")
+    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public PersonResponse createPerson(@Valid @RequestPart PersonRequest personRequest,
+                                       @RequestPart(name = "image") MultipartFile image) {
+        return personMapper.mapItemToResponse(
+                personService.save(personMapper.mapRequestToItem(personRequest), image)
+        );
     }
 
+    @Operation(summary = "Удалить человека")
     @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable @NotNull UUID id) {
         personService.delete(id);
     }
 
+    @Operation(summary = "Обновить человека")
     @PutMapping("/{id}")
     public @Valid PersonResponse updatePerson(@PathVariable  @NotNull UUID id, @Valid @RequestBody PersonRequest personRequest) {
         return personMapper.mapItemToResponse(personService.update(id, personMapper.mapRequestToItem(personRequest)));
     }
 
+    @Operation(summary = "Лайкнуть подкаст")
     @PostMapping("/like/{personId}/{podcastId}")
     public void likePodcast(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID podcastId) {
         personService.like(personId, podcastId);
     }
 
+    @Operation(summary = "Подписаться на человека")
     @PostMapping("/follow/{personId}/{authorId}")
     public void followPerson(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID authorId) {
         personService.follow(personId, authorId);
     }
 
+    @Operation(summary = "Отписаться от человека")
     @DeleteMapping("/unfollow/{personId}/{authorId}")
     public void unfollowPerson(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID authorId) {
         personService.unfollow(personId, authorId);
     }
 
+    @Operation(summary = "Убрать лайк с подкаста")
     @DeleteMapping("/unlike/{personId}/{podcastId}")
     public void unlikePodcast(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID podcastId) {
         personService.unlike(personId, podcastId);

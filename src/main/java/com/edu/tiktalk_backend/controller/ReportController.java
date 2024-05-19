@@ -7,6 +7,7 @@ import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.service.CrudService;
 import com.edu.tiktalk_backend.service.ReportService;
 import com.edu.tiktalk_backend.sort_enum.ReportSort;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.query.Page;
@@ -31,6 +32,7 @@ public class ReportController {
         this.reportMapper = reportMapper;
     }
 
+    @Operation(summary = "Получить все жалобы")
     @GetMapping("/")
     public @Valid List<ReportResponse> getReports(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                   @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
@@ -40,13 +42,17 @@ public class ReportController {
         );
     }
 
+    @Operation(summary = "Получить жалобу")
     @GetMapping("/{id}")
     public @Valid ReportResponse getReport(@PathVariable @NotNull UUID id) {
         return reportMapper.mapItemToResponse(reportService.getById(id));
     }
 
+    @Operation(summary = "Создать жалобу")
     @PostMapping("/")
-    public void createReport(@Valid @RequestBody ReportRequest reportRequest) {
-        reportService.save(reportMapper.mapRequestToItem(reportRequest));
+    public ReportResponse createReport(@Valid @RequestBody ReportRequest reportRequest) {
+        return reportMapper.mapItemToResponse(
+                reportService.save(reportMapper.mapRequestToItem(reportRequest))
+        );
     }
 }

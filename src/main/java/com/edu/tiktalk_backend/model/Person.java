@@ -14,6 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person extends IdContainer<UUID> {
+    private String name;
+
     @ManyToMany
     @JoinTable(
             name = "subscriptions",
@@ -35,4 +37,6 @@ public class Person extends IdContainer<UUID> {
             inverseJoinColumns = @JoinColumn(name = "podcast_id")
     )
     private List<Podcast> likedPodcasts;
+
+    private String imageUrl;
 }

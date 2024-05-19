@@ -44,4 +44,8 @@ public class Podcast extends IdContainer<UUID> {
     private int likes;
 
     private int reports_count;
+
+    private String audioUrl;
+
+    private String imageUrl;
 }
