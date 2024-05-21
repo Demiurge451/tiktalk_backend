@@ -49,7 +49,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- http://localhost:8080/tiktalk/swagger-ui/index.html -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

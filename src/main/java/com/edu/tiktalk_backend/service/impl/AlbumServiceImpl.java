@@ -38,8 +38,8 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
 
     @Override
     @Transactional
-    public Album save(Album album) {
-        return albumRepository.save(album);
+    public UUID save(Album album) {
+        return albumRepository.save(album).getId();
     }
 
     @Override

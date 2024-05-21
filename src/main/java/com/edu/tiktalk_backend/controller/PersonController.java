@@ -48,11 +48,9 @@ public class PersonController {
 
     @Operation(summary = "Создать человека")
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public PersonResponse createPerson(@Valid @RequestPart PersonRequest personRequest,
+    public UUID createPerson(@Valid @RequestPart PersonRequest personRequest,
                                        @RequestPart(name = "image") MultipartFile image) {
-        return personMapper.mapItemToResponse(
-                personService.save(personMapper.mapRequestToItem(personRequest), image)
-        );
+        return personService.save(personMapper.mapRequestToItem(personRequest), image);
     }
 
     @Operation(summary = "Удалить человека")

@@ -13,4 +13,11 @@
             <dropColumn tableName="person" columnName="name"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="2" author="konstantin">
+        <sqlFile path="add_reported_podcasts.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropTable tableName="reported_podcast"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

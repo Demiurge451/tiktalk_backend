@@ -16,7 +16,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class AlbumMapper {
     protected IdMapper<Podcast, UUID> idMapper;
 
