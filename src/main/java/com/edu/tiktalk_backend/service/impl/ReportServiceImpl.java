@@ -32,7 +32,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public Report save(Report report) {
-        return reportRepository.save(report);
+    public UUID save(Report report) {
+        return reportRepository.save(report).getId();
+    }
+
+    @Override
+    public List<Report> getAllByPodcast(PageRequest pageRequest, UUID id) {
+        return reportRepository.findAllByPersonId(pageRequest, id).getContent();
     }
 }

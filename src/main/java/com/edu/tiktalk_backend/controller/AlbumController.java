@@ -51,10 +51,8 @@ public class AlbumController {
 
     @Operation(summary = "Создать альбом")
     @PostMapping("/")
-    public AlbumResponse createAlbum(@Valid @RequestBody AlbumRequest albumRequest) {
-        return albumMapper.mapItemToResponse(
-                albumService.save(albumMapper.mapRequestToItem(albumRequest))
-        );
+    public UUID createAlbum(@Valid @RequestBody AlbumRequest albumRequest) {
+        return albumService.save(albumMapper.mapRequestToItem(albumRequest));
     }
 
     @Operation(summary = "Удалить альбом")

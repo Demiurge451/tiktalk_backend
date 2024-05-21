@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring")
 public abstract class PersonMapper {
     protected IdMapper<Report, UUID> idMapperReport;
     protected IdMapper<Podcast, UUID> idMapperPodcast;

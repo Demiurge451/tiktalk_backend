@@ -3,6 +3,7 @@ package com.edu.tiktalk_backend.controller;
 import com.edu.tiktalk_backend.dto.request.PodcastRequest;
 import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
+import com.edu.tiktalk_backend.service.PodcastService;
 import com.edu.tiktalk_backend.sort_enum.PodcastSort;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,10 +23,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/podcast")
 public class PodcastController {
-    private final PodcastServiceImpl podcastService;
+    private final PodcastService podcastService;
     private final PodcastMapper podcastMapper;
 
-    public PodcastController(PodcastServiceImpl podcastService, PodcastMapper podcastMapper) {
+    public PodcastController(PodcastService podcastService, PodcastMapper podcastMapper) {
         this.podcastService = podcastService;
         this.podcastMapper = podcastMapper;
     }
@@ -48,12 +49,10 @@ public class PodcastController {
 
     @Operation(summary = "Создать подкаст")
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public PodcastResponse createPodcast(@Valid @RequestPart PodcastRequest podcastRequest,
+    public UUID createPodcast(@Valid @RequestPart PodcastRequest podcastRequest,
                                          @RequestPart(value = "audio") MultipartFile audio,
                                          @RequestPart(value = "image") MultipartFile image) {
-        return podcastMapper.mapItemToResponse(
-                podcastService.save(podcastMapper.mapRequestToItem(podcastRequest), audio, image)
-        );
+        return podcastService.save(podcastMapper.mapRequestToItem(podcastRequest), audio, image);
     }
 
     @Operation(summary = "Удалить подкаст")
@@ -70,7 +69,23 @@ public class PodcastController {
 
     @Operation(summary = "Найти подкаст по названию")
     @GetMapping("/search/{name}")
-    public @Valid List<PodcastResponse> searchPodcasts(@PathVariable @NotNull String name) {
-        return podcastService.findByName(name).stream().map(podcastMapper::mapItemToResponse).toList();
+    public @Valid List<PodcastResponse> searchPodcasts(
+            @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
+            @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
+            @RequestParam(required = false, defaultValue = "ID_ASC") PodcastSort sortParam,
+            @PathVariable @NotNull String name) {
+        return podcastService.findByName(PageRequest.of(page, size, sortParam.getSortValue()), name).stream().map(podcastMapper::mapItemToResponse).toList();
+    }
+
+    @Operation(summary = "Забанить подкаст")
+    @PostMapping("/ban/podcast/{id}")
+    public void banPodcast(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        podcastService.banPodcast(id, verdict);
+    }
+
+    @Operation(summary = "Отклонить жалобы на подкаст")
+    @PostMapping("/reject/podcast/{id}")
+    public void rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        podcastService.rejectReports(id, verdict);
     }
 }

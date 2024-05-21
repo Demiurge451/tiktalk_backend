@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface ReportService {
     List<Report> getAll(PageRequest pageRequest);
     Report getById(UUID id);
-    Report save(Report item);
+    UUID save(Report item);
+    List<Report> getAllByPodcast(PageRequest pageRequest, UUID id);
 }
