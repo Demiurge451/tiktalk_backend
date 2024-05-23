@@ -8,9 +8,9 @@ spring:
     name: tiktalk_backend
 
   datasource:
-    url: jdbc:postgresql://localhost:6432/tiktalk_db
-    username: username
-    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:6432/tiktalk_db}
+    username: ${POSTGRES_USERNAME:username}
+    password: ${POSTGRES_PASSWORD:password}
 
   liquibase:
     enabled: true
@@ -26,7 +26,7 @@ spring:
       max-request-size: 50MB
 
 minio:
-  host: "http://127.0.0.1:9000"
-  download-host: "http:/localhost:9000"
+  host: ${MINIO_HOST:http://127.0.0.1:9000}
+  download-host: ${MINIO_DOWNLOAD_HOST:http:/localhost:9000}
   user: root
   password: password
