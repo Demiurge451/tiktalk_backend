@@ -9,7 +9,7 @@ docker-compose up -d
 ### Swagger
 
 ```
-http://localhost:8080/tiktalk/swagger-ui/index.html
+http://localhost:8089/tiktalk/swagger-ui/index.html
 ```
 
 ### MinIO web
