@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8089:8089"
     depends_on:
       - postgres-tiktalk
       - minio
@@ -15,14 +15,15 @@ services:
       - backend-tiktalk
 
   postgres-tiktalk:
-    container_name: postgres-tiktalk
     image: postgres:16
     ports:
       - "6432:5432"
+
     env_file:
       - ./env.dev
+
     volumes:
-      - postgres-tiktalk:/var/lib/postgresql/data
+      - postgres-tiktalk:/var/lib/postgres/data
     networks:
       - backend-tiktalk
 
@@ -35,14 +36,15 @@ services:
     env_file:
       - ./env.dev
     volumes:
-      - minio-data:/minio
+      - minio:/data/minio
     networks:
       - backend-tiktalk
     command: minio server /data/minio --console-address ":9090"
 
 volumes:
+  minio:
+    driver: local
   postgres-tiktalk: { }
-  minio-data: { }
 
 networks:
   backend-tiktalk: { }
