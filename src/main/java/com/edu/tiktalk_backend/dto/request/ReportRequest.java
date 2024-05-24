@@ -21,7 +21,7 @@ public class ReportRequest {
     private String description;
 
     @NotNull
-    private UUID personId;
+    private UUID reporterId;
 
     @NotNull
     private UUID podcastId;

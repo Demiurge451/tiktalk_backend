@@ -27,7 +27,7 @@ public class Person extends IdContainer<UUID> {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Podcast> podcasts;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
     private List<Report> reports;
 
     @ManyToMany(cascade = CascadeType.ALL)

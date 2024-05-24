@@ -20,7 +20,7 @@ public class ReportResponse {
 
     private String description;
 
-    private UUID personId;
+    private UUID reporterId;
 
     private UUID podcastId;
 }
