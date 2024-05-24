@@ -18,11 +18,11 @@ public class Report extends IdContainer<UUID> {
     private String description;
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "person_id", insertable = false, updatable = false)
-    private Person person;
+    @JoinColumn(name = "reporter_id", insertable = false, updatable = false)
+    private Person reporter;
 
-    @Column(name = "person_id")
-    private UUID personId;
+    @Column(name = "reporter_id")
+    private UUID reporterId;
 
     @ManyToOne(targetEntity = Podcast.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "podcast_id", insertable = false, updatable = false)

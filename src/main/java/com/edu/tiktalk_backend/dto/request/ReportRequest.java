@@ -24,5 +24,5 @@ public class ReportRequest {
     private UUID personId;
 
     @NotNull
-    private UUID podcastId;
+    private UUID reporterId;
 }
