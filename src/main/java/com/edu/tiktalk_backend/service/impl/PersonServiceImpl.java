@@ -41,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void delete(UUID id) {
-        personRepository.delete(getById(id));
+        personRepository.deleteById(id);
     }
 
     @Override
@@ -87,5 +87,15 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public void unfollow(UUID followerId, UUID authorId) {
         personRepository.unfollow(followerId, authorId);
+    }
+
+    @Override
+    public boolean isPodcastLiked(UUID personId, UUID podcastId) {
+        return personRepository.isPodcastLiked(personId, podcastId);
+    }
+
+    @Override
+    public boolean isPersonFollowed(UUID followerId, UUID authorId) {
+        return personRepository.isPersonFollowed(followerId, authorId);
     }
 }

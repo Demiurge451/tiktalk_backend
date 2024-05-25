@@ -6,6 +6,7 @@ import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.model.ReportedPodcast;
 import com.edu.tiktalk_backend.repository.PodcastRepository;
 import com.edu.tiktalk_backend.repository.ReportedPodcastRepository;
+import com.edu.tiktalk_backend.service.ReportedPodcastService;
 import com.edu.tiktalk_backend.service.enums.BucketEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,19 +20,27 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReportedPodcastServiceImpl {
+public class ReportedPodcastServiceImpl implements ReportedPodcastService {
     private final ReportedPodcastRepository reportedPodcastRepository;
 
+    @Override
     public List<ReportedPodcast> getAll(PageRequest pageRequest) {
         return reportedPodcastRepository.findAll(pageRequest).getContent();
     }
 
+    @Override
     public ReportedPodcast getById(UUID id) {
         return reportedPodcastRepository.findById(id).orElseThrow(() -> new NotFoundException("Podcast not found"));
     }
 
+    @Override
     @Transactional
     public void delete(UUID id) {
-        reportedPodcastRepository.delete(getById(id));
+        reportedPodcastRepository.deleteById(id);
+    }
+
+    @Override
+    public UUID save(ReportedPodcast reportedPodcast) {
+        return reportedPodcastRepository.save(reportedPodcast).getId();
     }
 }

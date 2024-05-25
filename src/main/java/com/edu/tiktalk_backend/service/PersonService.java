@@ -18,4 +18,6 @@ public interface PersonService {
     Person getById(UUID id);
     void delete(UUID id);
     Person update(UUID id, Person item);
+    boolean isPodcastLiked(UUID personId, UUID podcastId);
+    boolean isPersonFollowed(UUID followerId, UUID authorId);
 }

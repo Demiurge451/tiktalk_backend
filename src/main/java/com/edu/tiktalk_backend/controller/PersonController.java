@@ -72,20 +72,32 @@ public class PersonController {
     }
 
     @Operation(summary = "Подписаться на человека")
-    @PostMapping("/follow/{personId}/{authorId}")
-    public void followPerson(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID authorId) {
-        personService.follow(personId, authorId);
+    @PostMapping("/follow/{followerId}/{authorId}")
+    public void followPerson(@PathVariable @NotNull UUID followerId, @PathVariable @NotNull UUID authorId) {
+        personService.follow(followerId, authorId);
     }
 
     @Operation(summary = "Отписаться от человека")
-    @DeleteMapping("/unfollow/{personId}/{authorId}")
-    public void unfollowPerson(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID authorId) {
-        personService.unfollow(personId, authorId);
+    @DeleteMapping("/unfollow/{followerId}/{authorId}")
+    public void unfollowPerson(@PathVariable @NotNull UUID followerId, @PathVariable @NotNull UUID authorId) {
+        personService.unfollow(followerId, authorId);
     }
 
     @Operation(summary = "Убрать лайк с подкаста")
     @DeleteMapping("/unlike/{personId}/{podcastId}")
     public void unlikePodcast(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID podcastId) {
         personService.unlike(personId, podcastId);
+    }
+
+    @Operation(summary = "Проверка лайка")
+    @GetMapping("/isLiked/{personId}/{podcastId}")
+    public boolean isPodcastLiked(@PathVariable @NotNull UUID personId, @PathVariable @NotNull UUID podcastId) {
+        return personService.isPodcastLiked(personId, podcastId);
+    }
+
+    @Operation(summary = "Проверка подписки")
+    @GetMapping("/isFollowed/{followerId}/{authorId}")
+    public boolean isPersonFollowed(@PathVariable @NotNull UUID followerId, @PathVariable @NotNull UUID authorId) {
+        return personService.isPersonFollowed(followerId, authorId);
     }
 }

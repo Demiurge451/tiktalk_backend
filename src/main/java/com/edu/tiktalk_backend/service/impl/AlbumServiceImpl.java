@@ -33,7 +33,7 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
     @Override
     @Transactional
     public void delete(UUID id) {
-        albumRepository.delete(getById(id));
+        albumRepository.deleteById(id);
     }
 
     @Override

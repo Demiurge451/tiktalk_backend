@@ -13,8 +13,8 @@ public enum PodcastSort {
     NAME_DESC(Sort.by(Sort.Direction.DESC, "name")),
     LIKE_ASC(Sort.by(Sort.Direction.ASC, "likes")),
     LIKE_DESK(Sort.by(Sort.Direction.DESC, "likes")),
-    REPORTS_COUNT_ASC(Sort.by(Sort.Direction.ASC, "reports_count")),
-    REPORTS_COUNT_DESC(Sort.by(Sort.Direction.DESC, "reports_count"));
+    REPORTS_COUNT_ASC(Sort.by(Sort.Direction.ASC, "reportsCount")),
+    REPORTS_COUNT_DESC(Sort.by(Sort.Direction.DESC, "reportsCount"));
 
     private final Sort sortValue;
 }
