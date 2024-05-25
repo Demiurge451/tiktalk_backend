@@ -27,4 +27,10 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
     @Modifying
     @Query(value = "delete from followers where follower_id = :follower_id and author_id = :author_id", nativeQuery = true)
     void unfollow(@Param("follower_id") UUID followerId, @Param("author_id") UUID authorId);
+
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM liked_podcasts WHERE person_id = :person_id AND podcast_id = :podcast_id)", nativeQuery = true)
+    boolean isPodcastLiked(@Param("person_id") UUID personId, @Param("podcast_id") UUID podcastId);
+
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM followers WHERE follower_id = :follower_id AND author_id = :author_id)", nativeQuery = true)
+    boolean isPersonFollowed(@Param("follower_id") UUID followerId, @Param("author_id") UUID authorId);
 }
