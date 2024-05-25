@@ -18,6 +18,13 @@ public class Album extends IdContainer<UUID> {
 
     private String description;
 
+    @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "person_id", insertable = false, updatable = false)
+    private Person person;
+
+    @Column(name = "person_id")
+    private UUID personId;
+
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Podcast> podcasts;
 }

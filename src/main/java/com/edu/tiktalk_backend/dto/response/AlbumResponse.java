@@ -1,6 +1,7 @@
 package com.edu.tiktalk_backend.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -20,4 +21,6 @@ public class AlbumResponse {
     private String description;
 
     private List<UUID> podcasts;
+
+    private UUID personId;
 }

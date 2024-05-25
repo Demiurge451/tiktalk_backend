@@ -25,5 +25,7 @@ public class PersonResponse {
 
     private List<UUID> reports;
 
+    private List<UUID> albums;
+
     private String imageUrl;
 }

@@ -17,7 +17,9 @@ create table followers (
 create table album (
     id uuid primary key default uuid_generate_v4(),
     title varchar(50) not null,
-    description varchar(255)
+    description varchar(255),
+    person_id uuid not null,
+    foreign key (person_id) references person(id)
 );
 
 create table podcast (
