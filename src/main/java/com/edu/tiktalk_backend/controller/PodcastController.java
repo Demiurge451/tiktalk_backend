@@ -83,14 +83,14 @@ public class PodcastController {
 
     @Operation(summary = "Забанить подкаст")
     @PostMapping("/ban/podcast/{id}")
-    public void banPodcast(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        podcastService.banPodcast(id, verdict);
+    public UUID banPodcast(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.banPodcast(id, verdict);
     }
 
     @Operation(summary = "Отклонить жалобы на подкаст")
     @PostMapping("/reject/podcast/{id}")
-    public void rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        podcastService.rejectReports(id, verdict);
+    public UUID rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.rejectReports(id, verdict);
     }
 
     @Operation(summary = "Пожаловаться на подкаст")

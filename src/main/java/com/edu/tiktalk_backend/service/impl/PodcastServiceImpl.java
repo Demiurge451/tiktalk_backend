@@ -82,11 +82,14 @@ public class PodcastServiceImpl implements PodcastService {
 
     @Override
     @Transactional
-    public void rejectReports(UUID id, String verdict) {
+    public UUID rejectReports(UUID id, String verdict) {
         reportService.deleteAllByPodcast(id);
         Podcast podcast = getById(id);
         podcast.setReportsCount(0);
         update(id, podcast);
+        ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
+        banned.setVerdict(verdict);
+        return reportedPodcastService.save(banned);
     }
 
     @Override
