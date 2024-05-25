@@ -1,8 +1,10 @@
 package com.edu.tiktalk_backend.controller;
 
 import com.edu.tiktalk_backend.dto.request.PodcastRequest;
+import com.edu.tiktalk_backend.dto.request.ReportRequest;
 import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
+import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.service.PodcastService;
 import com.edu.tiktalk_backend.sort_enum.PodcastSort;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +27,12 @@ import java.util.UUID;
 public class PodcastController {
     private final PodcastService podcastService;
     private final PodcastMapper podcastMapper;
+    private final ReportMapper reportMapper;
 
-    public PodcastController(PodcastService podcastService, PodcastMapper podcastMapper) {
+    public PodcastController(PodcastService podcastService, PodcastMapper podcastMapper, ReportMapper reportMapper) {
         this.podcastService = podcastService;
         this.podcastMapper = podcastMapper;
+        this.reportMapper = reportMapper;
     }
 
     @Operation(summary = "Получить все подкасты")
@@ -87,5 +91,11 @@ public class PodcastController {
     @PostMapping("/reject/podcast/{id}")
     public void rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
         podcastService.rejectReports(id, verdict);
+    }
+
+    @Operation(summary = "Пожаловаться на подкаст")
+    @PostMapping("/report/")
+    public UUID createReport(@Valid @RequestBody ReportRequest reportRequest) {
+        return podcastService.reportPodcast(reportMapper.mapRequestToItem(reportRequest));
     }
 }

@@ -11,4 +11,5 @@ public interface ReportService {
     Report getById(UUID id);
     UUID save(Report item);
     List<Report> getAllByPodcast(PageRequest pageRequest, UUID id);
+    void deleteAllByPodcast(UUID id);
 }

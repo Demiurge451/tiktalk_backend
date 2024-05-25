@@ -12,4 +12,5 @@ import java.util.UUID;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, UUID> {
     Page<Report> findAllByReporterId(Pageable page, UUID personId);
+    void deleteALlByPodcastId(UUID podcastId);
 }

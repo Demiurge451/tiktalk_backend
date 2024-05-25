@@ -5,10 +5,13 @@ import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportedPodcastMapper;
 import com.edu.tiktalk_backend.model.Podcast;
+import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.model.ReportedPodcast;
 import com.edu.tiktalk_backend.repository.PodcastRepository;
 import com.edu.tiktalk_backend.repository.ReportedPodcastRepository;
 import com.edu.tiktalk_backend.service.PodcastService;
+import com.edu.tiktalk_backend.service.ReportService;
+import com.edu.tiktalk_backend.service.ReportedPodcastService;
 import com.edu.tiktalk_backend.service.enums.BucketEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,8 +29,9 @@ public class PodcastServiceImpl implements PodcastService {
     private final PodcastRepository podcastRepository;
     private final PodcastMapper podcastMapper;
     private final DownloadService downloadService;
-    private final ReportedPodcastRepository reportedPodcastRepository;
+    private final ReportedPodcastService reportedPodcastService;
     private final ReportedPodcastMapper reportedPodcastMapper;
+    private final ReportService reportService;
 
     @Override
     public List<Podcast> getAll(PageRequest pageRequest) {
@@ -42,7 +46,7 @@ public class PodcastServiceImpl implements PodcastService {
     @Override
     @Transactional
     public void delete(UUID id) {
-        podcastRepository.delete(getById(id));
+        podcastRepository.deleteById(id);
     }
 
     @Override
@@ -70,14 +74,27 @@ public class PodcastServiceImpl implements PodcastService {
     @Transactional
     public UUID banPodcast(UUID id, String verdict) {
         Podcast podcast = getById(id);
-        delete(id);
+        podcastRepository.deleteById(id);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
-        return reportedPodcastRepository.save(banned).getId();
+        return reportedPodcastService.save(banned);
     }
 
     @Override
-    public UUID rejectReports(UUID id, String verdict) {
-        return null;
+    @Transactional
+    public void rejectReports(UUID id, String verdict) {
+        reportService.deleteAllByPodcast(id);
+        Podcast podcast = getById(id);
+        podcast.setReportsCount(0);
+        update(id, podcast);
+    }
+
+    @Override
+    @Transactional
+    public UUID reportPodcast(Report report) {
+        Podcast podcast = getById(report.getPodcastId());
+        podcast.setReportsCount(podcast.getReportsCount() + 1);
+        update(podcast.getId(), podcast);
+        return reportService.save(report);
     }
 }

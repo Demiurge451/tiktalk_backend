@@ -16,5 +16,6 @@ public interface PodcastService {
     Podcast update(UUID id, Podcast podcast);
     List<Podcast> findByName(PageRequest pageRequest, String name);
     UUID banPodcast(UUID id, String verdict);
-    UUID rejectReports(UUID id, String verdict);
+    void rejectReports(UUID id, String verdict);
+    UUID reportPodcast(Report report);
 }

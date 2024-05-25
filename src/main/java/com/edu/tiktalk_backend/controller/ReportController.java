@@ -48,19 +48,13 @@ public class ReportController {
         return reportMapper.mapItemToResponse(reportService.getById(id));
     }
 
-    @Operation(summary = "Создать жалобу")
-    @PostMapping("/")
-    public UUID createReport(@Valid @RequestBody ReportRequest reportRequest) {
-        return reportService.save(reportMapper.mapRequestToItem(reportRequest));
-    }
-
     @Operation(summary = "Получить все жалобы на подкаст")
     @GetMapping("/reports/by-podcast/{id}")
     public List<ReportResponse> getAllByPodcast(
             @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
             @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
             @RequestParam(required = false, defaultValue = "ID_ASC") ReportSort sortParam,
-            @NotNull UUID id) {
+            @PathVariable @NotNull UUID id) {
         return reportMapper.mapItemsToResponses(
                 reportService.getAllByPodcast(PageRequest.of(page, size, sortParam.getSortValue()), id)
         );
