@@ -19,7 +19,7 @@ import java.util.UUID;
 public class DownloadService {
     private final MinioClient minioClient;
 
-    @Value("${minio.host}")
+    @Value("${minio.download-host}")
     private String downloadHost;
 
     @SneakyThrows

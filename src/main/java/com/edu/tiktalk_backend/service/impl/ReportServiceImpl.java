@@ -36,7 +36,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> getAllByPodcast(PageRequest pageRequest, UUID id) {
-        return reportRepository.findAllByReporterId(pageRequest, id).getContent();
+        return reportRepository.findAllByPodcastId(pageRequest, id).getContent();
     }
 
     @Override

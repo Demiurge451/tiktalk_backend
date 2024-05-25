@@ -40,7 +40,7 @@ public class PersonController {
         );
     }
 
-    @Operation(summary = "Получить все человека")
+    @Operation(summary = "Получить человека")
     @GetMapping("/{id}")
     public @Valid PersonResponse getPerson(@PathVariable @NotNull UUID id) {
         return personMapper.mapItemToResponse(personService.getById(id));

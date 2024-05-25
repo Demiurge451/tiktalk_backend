@@ -22,15 +22,18 @@ public abstract class PersonMapper {
     protected IdMapper<Report, UUID> idMapperReport;
     protected IdMapper<Podcast, UUID> idMapperPodcast;
     protected IdMapper<Person, UUID> idMapperPerson;
+    protected IdMapper<Album, UUID> idMapperAlbum;
 
     @Autowired
     protected void setPersonMapper(IdMapper<Report, UUID> idMapperReport,
                                    IdMapper<Podcast, UUID> idMapperPodcast,
-                                   IdMapper<Person, UUID> idMapperPerson
+                                   IdMapper<Person, UUID> idMapperPerson,
+                                   IdMapper<Album, UUID> idMapperAlbum
     ) {
         this.idMapperPodcast = idMapperPodcast;
         this.idMapperPerson = idMapperPerson;
         this.idMapperReport = idMapperReport;
+        this.idMapperAlbum = idMapperAlbum;
     }
     public abstract Person mapRequestToItem(PersonRequest personRequest);
 
@@ -38,6 +41,7 @@ public abstract class PersonMapper {
     @Mapping(target = "subscriptions", expression = "java(idMapperPerson.mapItemToId(person.getSubscriptions()))")
     @Mapping(target = "likedPodcasts", expression = "java(idMapperPodcast.mapItemToId(person.getLikedPodcasts()))")
     @Mapping(target = "reports", expression = "java(idMapperReport.mapItemToId(person.getReports()))")
+    @Mapping(target = "albums", expression = "java(idMapperAlbum.mapItemToId(person.getAlbums()))")
     public abstract PersonResponse mapItemToResponse(Person person);
 
     public abstract List<PersonResponse> mapItemsToResponses(List<Person> persons);
