@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.model;
 
-import com.edu.tiktalk_backend.model.id_container.IdContainer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +12,11 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Album extends IdContainer<UUID> {
+public class Album implements HasId {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected UUID id;
+
     private String title;
 
     private String description;

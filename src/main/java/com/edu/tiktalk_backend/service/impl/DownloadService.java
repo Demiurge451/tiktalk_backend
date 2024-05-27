@@ -1,6 +1,6 @@
 package com.edu.tiktalk_backend.service.impl;
 
-import com.edu.tiktalk_backend.service.enums.BucketEnum;
+import com.edu.tiktalk_backend.enums.BucketEnum;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;

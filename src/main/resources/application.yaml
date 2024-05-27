@@ -25,8 +25,28 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  keycloak:
+    server-url: http://localhost:8180
+    realm: tiktalk-realm
+    username: superadmin
+    password: superadmin
+    client-id: admin-cli
+    grant-type: password
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/tiktalk-realm
+
 minio:
   host: ${MINIO_HOST:http://127.0.0.1:9000}
-  download-host: http:/localhost:9000
+  download-host: http://localhost:9000
   user: root
   password: password
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: clientback
+      client-secret: 9mfwd5zMAzuqae5Ii7gs2f7KL7VJ5Gvh

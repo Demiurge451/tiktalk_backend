@@ -1,5 +1,6 @@
 services:
-#  client-backend:
+#  backend:
+#    container_name: backend
 #    image: app
 #    build:
 #      context: .
@@ -12,68 +13,70 @@ services:
 #    env_file:
 #      - ./env.dev
 #    networks:
-#      - backend-tiktalk
+#      - tiktalk-network
 
   postgres-tiktalk:
+    container_name: postgres-tiktalk
     image: postgres:16
     ports:
       - "6432:5432"
-
     env_file:
       - ./env.dev
-
     volumes:
-      - postgres-tiktalk:/var/lib/postgres/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
-      - backend-tiktalk
+      - tiktalk-network
 
   minio:
     image: 'minio/minio:latest'
     container_name: minio
     ports:
-      - '9090:9090'
-      - '9000:9000'
-    env_file:
-      - ./env.dev
+      - "9090:9090"
+      - "9000:9000"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: password
     volumes:
-      - minio:/data/minio
-    networks:
-      - backend-tiktalk
+      - ./data:/data
     command: minio server /data/minio --console-address ":9090"
+    networks:
+      - tiktalk-network
 
-    keycloak:
-      image: quay.io/keycloak/keycloak:24.0.2
-      container_name: keycloak
-      environment:
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_DATABASE: keycloak_db
-        DB_USER: ${POSTGRES_USER:-postgres}
-        DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: admin_password
-      ports:
-        - "8484:8484"
-      depends_on:
-        - keycloak-db
-      networks:
-        - backend-tiktalk
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak_db
+    environment:
+      POSTGRES_USER: kcuser
+      POSTGRES_PASSWORD: kcpassword
+      POSTGRES_DB: keycloakdb
+    ports:
+    - "25432:5432"
+    networks:
+    - tiktalk-network
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
 
-    keycloak-db:
-      image: library/postgres
-      environment:
-        POSTGRES_USER: ${POSTGRES_USER:-postgres}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-        POSTGRES_DB: keycloak_db
-      ports:
-        - "5432:5432"
-      restart: unless-stopped
-
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    depends_on:
+      - keycloak-db
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db/keycloakdb
+      KC_DB_USERNAME: kcuser
+      KC_DB_PASSWORD: kcpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+     - "8180:8080"
+    networks:
+      - tiktalk-network
 
 volumes:
-  minio:
-    driver: local
-  postgres-tiktalk: { }
+  postgres-data: {}
+  keycloak-data: {}
 
 networks:
-  backend-tiktalk: { }
+  tiktalk-network: { }

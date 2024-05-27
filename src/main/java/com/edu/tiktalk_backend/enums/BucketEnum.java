@@ -1,8 +1,7 @@
-package com.edu.tiktalk_backend.service.enums;
+package com.edu.tiktalk_backend.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor
 @Getter

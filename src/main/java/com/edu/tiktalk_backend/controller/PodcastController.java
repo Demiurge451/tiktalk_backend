@@ -6,14 +6,16 @@ import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.service.PodcastService;
-import com.edu.tiktalk_backend.sort_enum.PodcastSort;
+import com.edu.tiktalk_backend.enums.PodcastSort;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-import com.edu.tiktalk_backend.service.impl.PodcastServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,16 +26,12 @@ import java.util.UUID;
 @Validated
 @RestController
 @RequestMapping("/api/podcast")
+@SecurityRequirement(name = "Keycloak")
+@RequiredArgsConstructor
 public class PodcastController {
     private final PodcastService podcastService;
     private final PodcastMapper podcastMapper;
     private final ReportMapper reportMapper;
-
-    public PodcastController(PodcastService podcastService, PodcastMapper podcastMapper, ReportMapper reportMapper) {
-        this.podcastService = podcastService;
-        this.podcastMapper = podcastMapper;
-        this.reportMapper = reportMapper;
-    }
 
     @Operation(summary = "Получить все подкасты")
     @GetMapping("/")
@@ -52,6 +50,7 @@ public class PodcastController {
     }
 
     @Operation(summary = "Создать подкаст")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public UUID createPodcast(@Valid @RequestPart PodcastRequest podcastRequest,
                                          @RequestPart(value = "audio") MultipartFile audio,
@@ -61,12 +60,14 @@ public class PodcastController {
 
     @Operation(summary = "Удалить подкаст")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public void deletePodcast(@PathVariable @NotNull UUID id) {
         podcastService.delete(id);
     }
 
     @Operation(summary = "Обновить подкаст")
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public @Valid PodcastResponse updatePodcast(@PathVariable @NotNull UUID id, @Valid @RequestBody PodcastRequest podcastRequest) {
         return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
     }
@@ -83,18 +84,21 @@ public class PodcastController {
 
     @Operation(summary = "Забанить подкаст")
     @PostMapping("/ban/podcast/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public UUID banPodcast(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
         return podcastService.banPodcast(id, verdict);
     }
 
     @Operation(summary = "Отклонить жалобы на подкаст")
     @PostMapping("/reject/podcast/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public UUID rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
         return podcastService.rejectReports(id, verdict);
     }
 
     @Operation(summary = "Пожаловаться на подкаст")
     @PostMapping("/report/")
+    @PreAuthorize("hasRole('USER')")
     public UUID createReport(@Valid @RequestBody ReportRequest reportRequest) {
         return podcastService.reportPodcast(reportMapper.mapRequestToItem(reportRequest));
     }

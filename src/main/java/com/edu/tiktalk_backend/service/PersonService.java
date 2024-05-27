@@ -13,7 +13,8 @@ public interface PersonService {
     void like(UUID personId, UUID podcastId);
     void unlike(UUID personId, UUID podcastId);
     void unfollow(UUID followerId, UUID authorId);
-    UUID save(Person person, MultipartFile image);
+    UUID save(UUID id, Person person);
+    String upload(UUID id, MultipartFile file);
     List<Person> getAll(PageRequest pageRequest);
     Person getById(UUID id);
     void delete(UUID id);
