@@ -1,19 +1,19 @@
 services:
-#  backend:
-#    container_name: backend
-#    image: app
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8089:8089"
-#    depends_on:
-#      - postgres-tiktalk
-#      - minio
-#    env_file:
-#      - ./env.dev
-#    networks:
-#      - tiktalk-network
+  backend:
+    container_name: backend
+    image: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"
+    depends_on:
+      - postgres-tiktalk
+      - minio
+    env_file:
+      - ./env.dev
+    networks:
+      - tiktalk-network
 
   postgres-tiktalk:
     container_name: postgres-tiktalk

@@ -62,9 +62,9 @@ public class PodcastController {
         return podcastService.save(jwtUtil.getIdFromToken(jwt), podcastMapper.mapRequestToItem(podcastRequest));
     }
 
-    @Operation(summary = "загрузить изображение и видио")
+    @Operation(summary = "загрузить изображение и видео")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/upload/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/upload/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void upload(
             @PathVariable @NotNull UUID podcastId,
             @RequestPart(value = "audio") MultipartFile audio,

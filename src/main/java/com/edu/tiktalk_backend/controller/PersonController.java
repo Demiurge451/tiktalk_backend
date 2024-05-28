@@ -51,7 +51,7 @@ public class PersonController {
     }
 
     @Operation(summary = "Загрузить аватарку")
-    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasRole('USER')")
     public void uploadImage(@RequestPart(name = "image") MultipartFile image,
                             @AuthenticationPrincipal Jwt jwt) {
