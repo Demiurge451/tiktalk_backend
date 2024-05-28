@@ -4,7 +4,7 @@ import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.AlbumMapper;
 import com.edu.tiktalk_backend.model.Album;
 import com.edu.tiktalk_backend.repository.AlbumRepository;
-import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.service.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AlbumServiceImpl implements CrudService<Album, UUID> {
+public class AlbumServiceImpl implements AlbumService {
     private final AlbumRepository albumRepository;
     private final AlbumMapper albumMapper;
 
@@ -32,21 +32,33 @@ public class AlbumServiceImpl implements CrudService<Album, UUID> {
 
     @Override
     @Transactional
-    public void delete(UUID id) {
-        albumRepository.deleteById(id);
+    public void delete(UUID loginId, UUID albumId) {
+        checkBelong(loginId, albumId);
+        albumRepository.deleteById(albumId);
     }
 
     @Override
     @Transactional
-    public UUID save(Album album) {
-        return albumRepository.save(album).getId();
+    public UUID save(UUID loginId, Album album) {
+        album.setPersonId(loginId);
+        Album savedAlbum = albumRepository.save(album);
+        return savedAlbum.getId();
     }
 
     @Override
     @Transactional
-    public Album update(UUID id, Album item) {
-        Album album = getById(id);
+    public Album update(UUID loginId, UUID albumId, Album item) {
+        checkBelong(loginId, albumId);
+        item.setPersonId(loginId);
+        Album album = getById(albumId);
         albumMapper.updateAlbum(item, album);
         return albumRepository.save(album);
+    }
+
+    @Override
+    public void checkBelong(UUID loginId, UUID albumId) {
+        if (!getById(albumId).getPersonId().equals(loginId)) {
+            throw new RuntimeException("this album does not belong to this person");
+        }
     }
 }

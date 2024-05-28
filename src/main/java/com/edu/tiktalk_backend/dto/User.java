@@ -27,5 +27,5 @@ public class User {
     private String email;
 
     @NotNull
-    List<RolesEnum> roles;
+    RolesEnum role;
 }

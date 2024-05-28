@@ -10,7 +10,10 @@ import java.util.UUID;
 
 public interface ReportedPodcastService {
     List<ReportedPodcast> getAll(PageRequest pageRequest);
+
     ReportedPodcast getById(UUID id);
+
     void delete(UUID id);
+
     UUID save(ReportedPodcast reportedPodcast);
 }

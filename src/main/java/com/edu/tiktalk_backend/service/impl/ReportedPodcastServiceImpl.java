@@ -36,6 +36,7 @@ public class ReportedPodcastServiceImpl implements ReportedPodcastService {
 
     @Override
     public UUID save(ReportedPodcast reportedPodcast) {
-        return reportedPodcastRepository.save(reportedPodcast).getId();
+        ReportedPodcast podcast = reportedPodcastRepository.save(reportedPodcast);
+        return podcast.getId();
     }
 }

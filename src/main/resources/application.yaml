@@ -19,6 +19,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 
   servlet:
     multipart:
@@ -49,4 +53,4 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: clientback
-      client-secret: 9mfwd5zMAzuqae5Ii7gs2f7KL7VJ5Gvh
+      client-secret: u3FdovUfaKeEHRH1GJn44dhIcUgSX5k5

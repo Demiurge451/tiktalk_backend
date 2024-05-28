@@ -8,5 +8,5 @@ import lombok.Getter;
 public enum RolesEnum {
     USER("USER");
 
-    private final String role;
+    private final String name;
 }

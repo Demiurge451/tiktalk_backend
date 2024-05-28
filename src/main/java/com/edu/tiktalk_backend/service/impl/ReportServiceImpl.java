@@ -1,15 +1,9 @@
 package com.edu.tiktalk_backend.service.impl;
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
-import com.edu.tiktalk_backend.mapper.ReportMapper;
-import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.model.Report;
-import com.edu.tiktalk_backend.repository.PodcastRepository;
 import com.edu.tiktalk_backend.repository.ReportRepository;
-import com.edu.tiktalk_backend.service.CrudService;
-import com.edu.tiktalk_backend.service.PodcastService;
 import com.edu.tiktalk_backend.service.ReportService;
-import com.edu.tiktalk_backend.service.ReportedPodcastService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,7 +41,15 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public UUID save(Report report) {
-        return reportRepository.save(report).getId();
+    public UUID save(UUID loginId, Report report) {
+        Report savedReport = reportRepository.save(report);
+        return savedReport.getId();
+    }
+
+    @Override
+    public void checkBelong(UUID loginId, UUID reportId) {
+        if (!loginId.equals(getById(reportId).getReporterId())) {
+            throw new RuntimeException("loginId and reporterId does not match");
+        }
     }
 }

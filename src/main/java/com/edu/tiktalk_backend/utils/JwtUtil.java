@@ -9,6 +9,6 @@ import java.util.UUID;
 @Component
 public class JwtUtil {
     public UUID getIdFromToken(Jwt jwt) {
-        return UUID.fromString(jwt.getClaim(JwtClaimNames.ISS));
+        return UUID.fromString(jwt.getClaim(JwtClaimNames.SUB));
     }
 }

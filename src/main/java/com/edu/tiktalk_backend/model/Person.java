@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Person implements HasId {
     @Id
-    protected UUID id;
+    private UUID id;
 
     private String name;
 

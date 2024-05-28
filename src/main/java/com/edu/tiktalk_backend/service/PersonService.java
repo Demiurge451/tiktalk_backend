@@ -8,17 +8,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
-public interface PersonService {
-    void follow(UUID personId, UUID authorId);
-    void like(UUID personId, UUID podcastId);
-    void unlike(UUID personId, UUID podcastId);
-    void unfollow(UUID followerId, UUID authorId);
-    UUID save(UUID id, Person person);
-    String upload(UUID id, MultipartFile file);
-    List<Person> getAll(PageRequest pageRequest);
-    Person getById(UUID id);
-    void delete(UUID id);
-    Person update(UUID id, Person item);
+public interface PersonService extends CrudService<Person, UUID> {
+    void follow(UUID loginId, UUID authorId);
+
+    void like(UUID loginId, UUID podcastId);
+
+    void unlike(UUID loginId, UUID podcastId);
+
+    void unfollow(UUID loginId, UUID authorId);
+
+    void upload(UUID loginId, MultipartFile file);
+
     boolean isPodcastLiked(UUID personId, UUID podcastId);
+
     boolean isPersonFollowed(UUID followerId, UUID authorId);
 }
