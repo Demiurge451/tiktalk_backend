@@ -13,11 +13,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonResponse {
-    @NotNull
     private UUID id;
 
+    private String name;
+
     private List<UUID> podcasts;
+
     private List<UUID> subscriptions;
+
     private List<UUID> likedPodcasts;
+
     private List<UUID> reports;
+
+    private List<UUID> albums;
+
+    private String imageUrl;
 }

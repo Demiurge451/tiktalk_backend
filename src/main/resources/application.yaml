@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8089
   servlet:
     context-path: /tiktalk
 
@@ -8,10 +8,49 @@ spring:
     name: tiktalk_backend
 
   datasource:
-    url: jdbc:postgresql://localhost:6432/tiktalk_db
-    username: username
-    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:6432/tiktalk_db}
+    username: ${POSTGRES_USER:username}
+    password: ${POSTGRES_PASSWORD:password}
 
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  keycloak:
+    server-url: ${SERVER_URL:http://localhost:8180}
+    realm: tiktalk-realm
+    username: superadmin
+    password: superadmin
+    client-id: admin-cli
+    grant-type: password
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUE_URI:http://localhost:8180/realms/tiktalk-realm}
+
+minio:
+  host: ${MINIO_HOST:http://127.0.0.1:9000}
+  download-host: ${DOWNLOAD-HOST:http://localhost:9000}
+  user: root
+  password: password
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: clientback
+      client-secret: ff7wam2fIGjRDK89ns9RiPK15PnnEuvx

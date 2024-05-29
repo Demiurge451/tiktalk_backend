@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.model;
 
-import com.edu.tiktalk_backend.model.id_container.IdContainer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +12,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person extends IdContainer<UUID> {
+public class Person implements HasId {
+    @Id
+    private UUID id;
+
+    private String name;
+
     @ManyToMany
     @JoinTable(
             name = "subscriptions",
@@ -26,6 +30,9 @@ public class Person extends IdContainer<UUID> {
     private List<Podcast> podcasts;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Album> albums;
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
     private List<Report> reports;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -35,4 +42,6 @@ public class Person extends IdContainer<UUID> {
             inverseJoinColumns = @JoinColumn(name = "podcast_id")
     )
     private List<Podcast> likedPodcasts;
+
+    private String imageUrl;
 }

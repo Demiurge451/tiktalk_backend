@@ -1,10 +1,9 @@
 package com.edu.tiktalk_backend.service.impl;
 
 import com.edu.tiktalk_backend.exception.NotFoundException;
-import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.repository.ReportRepository;
-import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,9 +15,8 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReportServiceImpl implements CrudService<Report, UUID> {
+public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
-    private final ReportMapper reportMapper;
 
     @Override
     public List<Report> getAll(PageRequest pageRequest) {
@@ -31,22 +29,27 @@ public class ReportServiceImpl implements CrudService<Report, UUID> {
     }
 
     @Override
-    @Transactional
-    public void delete(UUID id) {
-        reportRepository.delete(getById(id));
+    public List<Report> getAllByPodcast(PageRequest pageRequest, UUID id) {
+        return reportRepository.findAllByPodcastId(pageRequest, id).getContent();
     }
 
     @Override
     @Transactional
-    public void save(Report report) {
-        reportRepository.save(report);
+    public void deleteAllByPodcast(UUID podcastId) {
+        reportRepository.deleteALlByPodcastId(podcastId);
     }
 
     @Override
     @Transactional
-    public Report update(UUID id, Report item) {
-        Report report = getById(id);
-        reportMapper.updateReport(item, report);
-        return reportRepository.save(report);
+    public UUID save(UUID loginId, Report report) {
+        Report savedReport = reportRepository.save(report);
+        return savedReport.getId();
+    }
+
+    @Override
+    public void checkBelong(UUID loginId, UUID reportId) {
+        if (!loginId.equals(getById(reportId).getReporterId())) {
+            throw new RuntimeException("loginId and reporterId does not match");
+        }
     }
 }

@@ -15,25 +15,25 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PodcastResponse {
-    @NotNull
     private UUID id;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
     private String name;
 
-    @Size(min = 1, max = 255)
     private String description;
 
-    @NotNull
     private UUID personId;
 
-    @NotNull
     private UUID albumId;
 
     private List<UUID> reports;
+
     private List<UUID> likedPersons;
 
-    @Min(0)
     public int likes;
+
+    public int reportsCount;
+
+    private String imageUrl;
+
+    private String audioUrl;
 }

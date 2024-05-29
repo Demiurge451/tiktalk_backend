@@ -16,16 +16,11 @@ import java.util.UUID;
 public class ReportResponse {
     private UUID id;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
     private String theme;
 
-    @Size(min = 1, max = 255)
     private String description;
 
-    @NotNull
-    private UUID personId;
+    private UUID reporterId;
 
-    @NotNull
     private UUID podcastId;
 }

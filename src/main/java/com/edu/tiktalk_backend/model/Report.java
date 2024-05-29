@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.model;
 
-import com.edu.tiktalk_backend.model.id_container.IdContainer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,16 +11,26 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Report extends IdContainer<UUID> {
+public class Report implements HasId {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected UUID id;
+
     private String theme;
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "reporter_id", insertable = false, updatable = false)
+    private Person reporter;
 
-    @ManyToOne
-    @JoinColumn(name = "podcast_id")
+    @Column(name = "reporter_id")
+    private UUID reporterId;
+
+    @ManyToOne(targetEntity = Podcast.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "podcast_id", insertable = false, updatable = false)
     private Podcast podcast;
+
+    @Column(name = "podcast_id")
+    private UUID podcastId;
 }

@@ -1,4 +1,4 @@
-package com.edu.tiktalk_backend.sort_enum;
+package com.edu.tiktalk_backend.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

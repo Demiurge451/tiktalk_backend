@@ -1,14 +1,20 @@
 package com.edu.tiktalk_backend.mapper;
 
-import com.edu.tiktalk_backend.model.id_container.IdContainer;
 
+import com.edu.tiktalk_backend.model.HasId;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class IdMapper<T extends IdContainer<ID>, ID> {
-    public List<ID> mapItemToId(List<T> podcasts) {
+public class IdMapper {
+    public List<UUID> mapItemToId(List<HasId> podcasts) {
+        if (podcasts == null || podcasts.isEmpty()) {
+            return new ArrayList<>();
+        }
         return podcasts.stream()
-                .map(T::getId)
+                .map(HasId::getId)
                 .collect(Collectors.toList());
     }
 }
