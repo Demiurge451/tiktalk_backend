@@ -30,7 +30,7 @@ spring:
       max-request-size: 50MB
 
   keycloak:
-    server-url: http://localhost:8180
+    server-url: ${SERVER_URL:http://localhost:8180}
     realm: tiktalk-realm
     username: superadmin
     password: superadmin
@@ -41,11 +41,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/tiktalk-realm
+          issuer-uri: ${ISSUE_URI:http://localhost:8180/realms/tiktalk-realm}
 
 minio:
   host: ${MINIO_HOST:http://127.0.0.1:9000}
-  download-host: http://localhost:9000
+  download-host: ${DOWNLOAD-HOST:http://localhost:9000}
   user: root
   password: password
 
@@ -53,4 +53,4 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: clientback
-      client-secret: u3FdovUfaKeEHRH1GJn44dhIcUgSX5k5
+      client-secret: ff7wam2fIGjRDK89ns9RiPK15PnnEuvx
