@@ -22,7 +22,4 @@ public class PodcastRequest {
 
     @NotNull
     private UUID albumId;
-
-    @NotNull
-    private UUID personId;
 }

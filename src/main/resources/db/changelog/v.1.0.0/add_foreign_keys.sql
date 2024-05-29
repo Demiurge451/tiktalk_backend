@@ -3,7 +3,7 @@ create extension if not exists "uuid-ossp";
 drop table if exists person, album, podcast, report;
 
 create table person (
-    id uuid primary key default uuid_generate_v4()
+    id uuid primary key
 );
 
 create table followers (

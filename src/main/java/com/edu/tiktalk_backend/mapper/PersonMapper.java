@@ -1,50 +1,48 @@
 package com.edu.tiktalk_backend.mapper;
 
+import com.edu.tiktalk_backend.dto.User;
 import com.edu.tiktalk_backend.dto.request.PersonRequest;
 import com.edu.tiktalk_backend.dto.response.PersonResponse;
-import com.edu.tiktalk_backend.model.Album;
-import com.edu.tiktalk_backend.model.Person;
-import com.edu.tiktalk_backend.model.Podcast;
-import com.edu.tiktalk_backend.model.Report;
-import com.edu.tiktalk_backend.service.CrudService;
+import com.edu.tiktalk_backend.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public abstract class PersonMapper {
-    protected IdMapper<Report, UUID> idMapperReport;
-    protected IdMapper<Podcast, UUID> idMapperPodcast;
-    protected IdMapper<Person, UUID> idMapperPerson;
-    protected IdMapper<Album, UUID> idMapperAlbum;
+    protected IdMapper idMapper;
 
     @Autowired
-    protected void setPersonMapper(IdMapper<Report, UUID> idMapperReport,
-                                   IdMapper<Podcast, UUID> idMapperPodcast,
-                                   IdMapper<Person, UUID> idMapperPerson,
-                                   IdMapper<Album, UUID> idMapperAlbum
+    protected void setPersonMapper(IdMapper idMapper
     ) {
-        this.idMapperPodcast = idMapperPodcast;
-        this.idMapperPerson = idMapperPerson;
-        this.idMapperReport = idMapperReport;
-        this.idMapperAlbum = idMapperAlbum;
+        this.idMapper = idMapper;
     }
+
     public abstract Person mapRequestToItem(PersonRequest personRequest);
 
-    @Mapping(target = "podcasts", expression = "java(idMapperPodcast.mapItemToId(person.getPodcasts()))")
-    @Mapping(target = "subscriptions", expression = "java(idMapperPerson.mapItemToId(person.getSubscriptions()))")
-    @Mapping(target = "likedPodcasts", expression = "java(idMapperPodcast.mapItemToId(person.getLikedPodcasts()))")
-    @Mapping(target = "reports", expression = "java(idMapperReport.mapItemToId(person.getReports()))")
-    @Mapping(target = "albums", expression = "java(idMapperAlbum.mapItemToId(person.getAlbums()))")
+    @Mapping(target = "podcasts", expression = "java(idMapper.mapItemToId(mapHasIds4(person.getPodcasts())))")
+    @Mapping(target = "subscriptions", expression = "java(idMapper.mapItemToId(mapHasIds2(person.getSubscriptions())))")
+    @Mapping(target = "likedPodcasts", expression = "java(idMapper.mapItemToId(mapHasIds4(person.getLikedPodcasts())))")
+    @Mapping(target = "reports", expression = "java(idMapper.mapItemToId(mapHasIds3(person.getReports())))")
+    @Mapping(target = "albums", expression = "java(idMapper.mapItemToId(mapHasIds(person.getAlbums())))")
     public abstract PersonResponse mapItemToResponse(Person person);
 
     public abstract List<PersonResponse> mapItemsToResponses(List<Person> persons);
 
     public abstract void updatePerson(Person source, @MappingTarget Person target);
+
+    @Mapping(source = "firstName", target = "name")
+    public abstract Person mapUser(User user);
+
+    public abstract List<HasId> mapHasIds(List<Album> albums);
+
+    public abstract List<HasId> mapHasIds2(List<Person> albums);
+
+    public abstract List<HasId> mapHasIds3(List<Report> albums);
+
+    public abstract List<HasId> mapHasIds4(List<Podcast> albums);
+
 }

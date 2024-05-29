@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.service.impl;
 
-import com.edu.tiktalk_backend.dto.request.ReportedPodcastRequest;
 import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportedPodcastMapper;
@@ -8,11 +7,10 @@ import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.model.Report;
 import com.edu.tiktalk_backend.model.ReportedPodcast;
 import com.edu.tiktalk_backend.repository.PodcastRepository;
-import com.edu.tiktalk_backend.repository.ReportedPodcastRepository;
 import com.edu.tiktalk_backend.service.PodcastService;
 import com.edu.tiktalk_backend.service.ReportService;
 import com.edu.tiktalk_backend.service.ReportedPodcastService;
-import com.edu.tiktalk_backend.service.enums.BucketEnum;
+import com.edu.tiktalk_backend.enums.BucketEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -45,22 +43,25 @@ public class PodcastServiceImpl implements PodcastService {
 
     @Override
     @Transactional
-    public void delete(UUID id) {
-        podcastRepository.deleteById(id);
+    public void delete(UUID loginId, UUID podcastId) {
+        checkBelong(loginId, podcastId);
+        podcastRepository.deleteById(podcastId);
     }
 
     @Override
     @Transactional
-    public UUID save(Podcast podcast, MultipartFile audio, MultipartFile image) {
-        podcast.setAudioUrl(downloadService.upload(audio, BucketEnum.PODCAST_BUCKET));
-        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
-        return podcastRepository.save(podcast).getId();
+    public UUID save(UUID personId, Podcast podcast) {
+        podcast.setPersonId(personId);
+        Podcast p = podcastRepository.save(podcast);
+        return p.getId();
     }
 
     @Override
     @Transactional
-    public Podcast update(UUID id, Podcast item) {
-        Podcast podcast = getById(id);
+    public Podcast update(UUID personId, UUID podcastId, Podcast item) {
+        checkBelong(personId, podcastId);
+        item.setPersonId(personId);
+        Podcast podcast = getById(podcastId);
         podcastMapper.updatePodcast(item, podcast);
         return podcastRepository.save(podcast);
     }
@@ -86,18 +87,35 @@ public class PodcastServiceImpl implements PodcastService {
         reportService.deleteAllByPodcast(id);
         Podcast podcast = getById(id);
         podcast.setReportsCount(0);
-        update(id, podcast);
+        podcastRepository.save(podcast);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
         return reportedPodcastService.save(banned);
     }
 
     @Override
+    public void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image) {
+        checkBelong(personId, podcastId);
+        Podcast podcast = getById(podcastId);
+        podcast.setAudioUrl(downloadService.upload(audio, BucketEnum.PODCAST_BUCKET));
+        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
+        podcastRepository.save(podcast);
+    }
+
+    @Override
     @Transactional
-    public UUID reportPodcast(Report report) {
+    public UUID reportPodcast(UUID personId, Report report) {
+        checkBelong(personId, report.getPodcastId());
         Podcast podcast = getById(report.getPodcastId());
         podcast.setReportsCount(podcast.getReportsCount() + 1);
-        update(podcast.getId(), podcast);
-        return reportService.save(report);
+        podcastRepository.save(podcast);
+        return reportService.save(personId, report);
+    }
+
+    @Override
+    public void checkBelong(UUID personId, UUID podcastId) {
+        if (!getById(podcastId).getPersonId().equals(personId)) {
+            throw new RuntimeException("podcast doesn't belong to person");
+        }
     }
 }

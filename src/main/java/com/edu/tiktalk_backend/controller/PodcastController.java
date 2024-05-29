@@ -6,14 +6,19 @@ import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportMapper;
 import com.edu.tiktalk_backend.service.PodcastService;
-import com.edu.tiktalk_backend.sort_enum.PodcastSort;
+import com.edu.tiktalk_backend.enums.PodcastSort;
+import com.edu.tiktalk_backend.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-import com.edu.tiktalk_backend.service.impl.PodcastServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,22 +29,20 @@ import java.util.UUID;
 @Validated
 @RestController
 @RequestMapping("/api/podcast")
+@SecurityRequirement(name = "Keycloak")
+@RequiredArgsConstructor
 public class PodcastController {
     private final PodcastService podcastService;
     private final PodcastMapper podcastMapper;
     private final ReportMapper reportMapper;
-
-    public PodcastController(PodcastService podcastService, PodcastMapper podcastMapper, ReportMapper reportMapper) {
-        this.podcastService = podcastService;
-        this.podcastMapper = podcastMapper;
-        this.reportMapper = reportMapper;
-    }
+    private final JwtUtil jwtUtil;
 
     @Operation(summary = "Получить все подкасты")
     @GetMapping("/")
-    public @Valid List<PodcastResponse> getPodcasts(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
-                                                    @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-                                                    @RequestParam(required = false, defaultValue = "ID_ASC") PodcastSort sortParam)  {
+    public @Valid List<PodcastResponse> getPodcasts(
+            @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
+            @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
+            @RequestParam(required = false, defaultValue = "ID_ASC") PodcastSort sortParam)  {
         return podcastMapper.mapItemsToResponses(
                 podcastService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
         );
@@ -52,23 +55,41 @@ public class PodcastController {
     }
 
     @Operation(summary = "Создать подкаст")
-    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/")
     public UUID createPodcast(@Valid @RequestPart PodcastRequest podcastRequest,
-                                         @RequestPart(value = "audio") MultipartFile audio,
-                                         @RequestPart(value = "image") MultipartFile image) {
-        return podcastService.save(podcastMapper.mapRequestToItem(podcastRequest), audio, image);
+                              @AuthenticationPrincipal Jwt jwt) {
+        return podcastService.save(jwtUtil.getIdFromToken(jwt), podcastMapper.mapRequestToItem(podcastRequest));
+    }
+
+    @Operation(summary = "загрузить изображение и видео")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/upload/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void upload(
+            @PathVariable @NotNull UUID podcastId,
+            @RequestPart(value = "audio") MultipartFile audio,
+            @RequestPart(value = "image") MultipartFile image,
+            @AuthenticationPrincipal Jwt jwt) {
+        podcastService.upload(jwtUtil.getIdFromToken(jwt), podcastId, audio, image);
     }
 
     @Operation(summary = "Удалить подкаст")
     @DeleteMapping("/{id}")
-    public void deletePodcast(@PathVariable @NotNull UUID id) {
-        podcastService.delete(id);
+    @PreAuthorize("hasRole('USER')")
+    public void deletePodcast(@PathVariable @NotNull UUID id,
+                              @AuthenticationPrincipal Jwt jwt) {
+        podcastService.delete(jwtUtil.getIdFromToken(jwt), id);
     }
 
     @Operation(summary = "Обновить подкаст")
-    @PutMapping("/{id}")
-    public @Valid PodcastResponse updatePodcast(@PathVariable @NotNull UUID id, @Valid @RequestBody PodcastRequest podcastRequest) {
-        return podcastMapper.mapItemToResponse(podcastService.update(id, podcastMapper.mapRequestToItem(podcastRequest)));
+    @PutMapping("/{podcast_id}")
+    @PreAuthorize("hasRole('USER')")
+    public @Valid PodcastResponse updatePodcast(
+            @PathVariable @NotNull UUID podcast_id,
+            @Valid @RequestBody PodcastRequest podcastRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        return podcastMapper.mapItemToResponse(podcastService.update(
+                jwtUtil.getIdFromToken(jwt), podcast_id, podcastMapper.mapRequestToItem(podcastRequest)));
     }
 
     @Operation(summary = "Найти подкаст по названию")
@@ -82,20 +103,24 @@ public class PodcastController {
     }
 
     @Operation(summary = "Забанить подкаст")
-    @PostMapping("/ban/podcast/{id}")
-    public UUID banPodcast(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        return podcastService.banPodcast(id, verdict);
+    @PostMapping("/ban/podcast/{person_id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UUID banPodcast(@PathVariable UUID person_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.banPodcast(person_id, verdict);
     }
 
     @Operation(summary = "Отклонить жалобы на подкаст")
-    @PostMapping("/reject/podcast/{id}")
-    public UUID rejectReports(@PathVariable UUID id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        return podcastService.rejectReports(id, verdict);
+    @PostMapping("/reject/{podcast_id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UUID rejectReports(@PathVariable UUID podcast_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.rejectReports(podcast_id, verdict);
     }
 
     @Operation(summary = "Пожаловаться на подкаст")
     @PostMapping("/report/")
-    public UUID createReport(@Valid @RequestBody ReportRequest reportRequest) {
-        return podcastService.reportPodcast(reportMapper.mapRequestToItem(reportRequest));
+    @PreAuthorize("hasRole('USER')")
+    public UUID createReport(@Valid @RequestBody ReportRequest reportRequest,
+                             @AuthenticationPrincipal Jwt jwt) {
+        return podcastService.reportPodcast(jwtUtil.getIdFromToken(jwt), reportMapper.mapRequestToItem(reportRequest));
     }
 }
