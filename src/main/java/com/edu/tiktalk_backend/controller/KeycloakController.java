@@ -5,6 +5,7 @@ import com.edu.tiktalk_backend.service.impl.KeycloakServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class KeycloakController {
 
     @Operation(summary = "Зарегистрировать пользователя")
     @PostMapping("/register/")
+    @PreAuthorize("hasRole('SUPERADMIN')")
     public UUID registerUser(@RequestBody User user) {
         return keycloakService.register(user);
     }

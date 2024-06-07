@@ -94,6 +94,7 @@ public class PodcastServiceImpl implements PodcastService {
     }
 
     @Override
+    @Transactional
     public void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image) {
         checkBelong(personId, podcastId);
         Podcast podcast = getById(podcastId);
