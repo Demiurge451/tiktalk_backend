@@ -57,7 +57,7 @@ public class PodcastController {
     @Operation(summary = "Создать подкаст")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/")
-    public UUID createPodcast(@Valid @RequestPart PodcastRequest podcastRequest,
+    public UUID createPodcast(@Valid @RequestBody PodcastRequest podcastRequest,
                               @AuthenticationPrincipal Jwt jwt) {
         return podcastService.save(jwtUtil.getIdFromToken(jwt), podcastMapper.mapRequestToItem(podcastRequest));
     }

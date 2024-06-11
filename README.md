@@ -17,3 +17,9 @@ http://localhost:8089/tiktalk/swagger-ui/index.html
 ```
 http://127.0.0.1:9000
 ```
+
+### Keycloak admin panel
+
+```
+http://localhost:8180
+```
