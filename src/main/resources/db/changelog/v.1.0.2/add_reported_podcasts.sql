@@ -1,6 +1,6 @@
 create table reported_podcast(
     id uuid primary key default uuid_generate_v4(),
-    creation_date date not null,
+    creation_date date default now(),
     name varchar(50) not null,
     description varchar(255),
     album_id uuid not null,

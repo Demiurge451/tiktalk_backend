@@ -8,7 +8,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
-public interface PersonService extends CrudService<Person, UUID> {
+public interface PersonService {
+    List<Person> getAll(PageRequest pageRequest);
+
+    Person getById(UUID id);
+
+    Person getSelf(UUID loginId);
+
+    void delete(UUID loginId, UUID itemId);
+
+    UUID save(UUID loginId, Person item);
+
+    Person update(UUID loginId, Person item);
+
+    void checkBelong(UUID loginId, UUID itemId);
+
     void follow(UUID loginId, UUID authorId);
 
     void like(UUID loginId, UUID podcastId);

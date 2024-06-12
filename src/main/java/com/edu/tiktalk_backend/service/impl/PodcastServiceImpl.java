@@ -37,6 +37,11 @@ public class PodcastServiceImpl implements PodcastService {
     }
 
     @Override
+    public List<Podcast> getSubscribedPodcasts(PageRequest pageRequest, UUID loginId) {
+        return podcastRepository.getSubscribedPodcasts(pageRequest, loginId).getContent();
+    }
+
+    @Override
     public Podcast getById(UUID id) {
         return podcastRepository.findById(id).orElseThrow(() -> new NotFoundException("Podcast not found"));
     }

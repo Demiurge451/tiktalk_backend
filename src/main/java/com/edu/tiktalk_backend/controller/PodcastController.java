@@ -37,18 +37,34 @@ public class PodcastController {
     private final ReportMapper reportMapper;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "Получить все подкасты")
+    @Operation(summary = "Лента подкастов")
     @GetMapping("/")
     public @Valid List<PodcastResponse> getPodcasts(
             @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
             @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
-            @RequestParam(required = false, defaultValue = "ID_ASC") PodcastSort sortParam)  {
+            @RequestParam(required = false, defaultValue = "LIKE_DESK") PodcastSort sortParam)  {
         return podcastMapper.mapItemsToResponses(
                 podcastService.getAll(PageRequest.of(page, size, sortParam.getSortValue()))
         );
     }
 
-    @Operation(summary = "Получить подкаст")
+    @Operation(summary = "Лента подписок")
+    @GetMapping("/subscribed/")
+    @PreAuthorize("hasRole('USER')")
+    public @Valid List<PodcastResponse> getSubscribedPodcasts(
+            @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
+            @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
+            @RequestParam(required = false, defaultValue = "CREATION_DATE_ASC") PodcastSort sortParam,
+            @AuthenticationPrincipal Jwt jwt) {
+        return podcastMapper.mapItemsToResponses(
+                podcastService.getSubscribedPodcasts(
+                        PageRequest.of(page, size, sortParam.getSortValue()),
+                        jwtUtil.getIdFromToken(jwt)
+                )
+        );
+    }
+
+    @Operation(summary = "Информация о подкасте")
     @GetMapping("/{id}")
     public PodcastResponse getPodcast(@PathVariable @NotNull UUID id) {
         return podcastMapper.mapItemToResponse(podcastService.getById(id));
@@ -62,7 +78,7 @@ public class PodcastController {
         return podcastService.save(jwtUtil.getIdFromToken(jwt), podcastMapper.mapRequestToItem(podcastRequest));
     }
 
-    @Operation(summary = "загрузить изображение и видео")
+    @Operation(summary = "Загрузить изображение и видео")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/upload/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void upload(
@@ -81,7 +97,7 @@ public class PodcastController {
         podcastService.delete(jwtUtil.getIdFromToken(jwt), id);
     }
 
-    @Operation(summary = "Обновить подкаст")
+    @Operation(summary = "Редактировать подкаст")
     @PutMapping("/{podcast_id}")
     @PreAuthorize("hasRole('USER')")
     public @Valid PodcastResponse updatePodcast(

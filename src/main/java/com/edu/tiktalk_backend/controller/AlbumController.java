@@ -32,7 +32,7 @@ public class AlbumController {
     private final AlbumMapper albumMapper;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "Получить все альбомы")
+    @Operation(summary = "Список альбом")
     @GetMapping("/")
     public @Valid List<AlbumResponse> getAlbums(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                 @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
@@ -42,7 +42,16 @@ public class AlbumController {
         );
     }
 
-    @Operation(summary = "Получить альбом")
+    @Operation(summary = "Список моих альбом")
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('USER')")
+    public @Valid List<AlbumResponse> getMyAlbums(@AuthenticationPrincipal Jwt jwt) {
+        return albumMapper.mapItemsToResponses(
+                albumService.getMyAlbums(jwtUtil.getIdFromToken(jwt))
+        );
+    }
+
+    @Operation(summary = "Информация об альбоме")
     @GetMapping("/{id}")
     public @Valid AlbumResponse getAlbum(@PathVariable @NotNull UUID id) {
         return albumMapper.mapItemToResponse(albumService.getById(id));
@@ -63,7 +72,7 @@ public class AlbumController {
         albumService.delete(jwtUtil.getIdFromToken(jwt), id);
     }
 
-    @Operation(summary = "Обновить альбом")
+    @Operation(summary = "Редактировать альбом")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public @Valid AlbumResponse updateAlbum(@PathVariable @NotNull UUID id,

@@ -61,4 +61,9 @@ public class AlbumServiceImpl implements AlbumService {
             throw new RuntimeException("this album does not belong to this person");
         }
     }
+
+    @Override
+    public List<Album> getMyAlbums(UUID loginId) {
+        return albumRepository.findAllByPersonId(loginId);
+    }
 }

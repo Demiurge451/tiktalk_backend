@@ -26,7 +26,7 @@ public class ReportController {
     private final ReportService reportService;
     private final ReportMapper reportMapper;
 
-    @Operation(summary = "Получить все жалобы")
+    @Operation(summary = "Список жалоб")
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     public @Valid List<ReportResponse> getReports(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
@@ -37,14 +37,14 @@ public class ReportController {
         );
     }
 
-    @Operation(summary = "Получить жалобу")
+    @Operation(summary = "Информация о жалобе")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public @Valid ReportResponse getReport(@PathVariable @NotNull UUID id) {
         return reportMapper.mapItemToResponse(reportService.getById(id));
     }
 
-    @Operation(summary = "Получить все жалобы на подкаст")
+    @Operation(summary = "Список жалоб на подкаст")
     @GetMapping("/reports/by-podcast/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public List<ReportResponse> getAllByPodcast(
