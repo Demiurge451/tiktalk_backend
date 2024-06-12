@@ -33,7 +33,7 @@ public class PersonController {
     private final PersonMapper personMapper;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "Получить всех людей")
+    @Operation(summary = "Список пользователей")
     @GetMapping("/")
     public @Valid List<PersonResponse> getPersons(
             @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
@@ -44,10 +44,17 @@ public class PersonController {
         );
     }
 
-    @Operation(summary = "Получить человека")
+    @Operation(summary = "Информация о человеке")
     @GetMapping("/{id}")
     public @Valid PersonResponse getPerson(@PathVariable @NotNull UUID id) {
         return personMapper.mapItemToResponse(personService.getById(id));
+    }
+
+    @Operation(summary = "Информация обо мне")
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public @Valid PersonResponse getSelf(@AuthenticationPrincipal Jwt jwt) {
+        return personMapper.mapItemToResponse(personService.getSelf(jwtUtil.getIdFromToken(jwt)));
     }
 
     @Operation(summary = "Загрузить аватарку")
@@ -66,13 +73,13 @@ public class PersonController {
         personService.delete(jwtUtil.getIdFromToken(jwt), personId);
     }
 
-    @Operation(summary = "Обновить человека")
-    @PutMapping("/{id}")
+    @Operation(summary = "Редактировать данные человека")
+    @PutMapping("/update")
     @PreAuthorize("hasRole('USER')")
-    public @Valid PersonResponse updatePerson(@PathVariable UUID id, @Valid @RequestBody PersonRequest personRequest,
+    public @Valid PersonResponse updatePerson(@Valid @RequestBody PersonRequest personRequest,
                                               @AuthenticationPrincipal Jwt jwt) {
         return personMapper.mapItemToResponse(personService.update(jwtUtil.getIdFromToken(jwt),
-                id, personMapper.mapRequestToItem(personRequest)));
+                personMapper.mapRequestToItem(personRequest)));
     }
 
     @Operation(summary = "Лайкнуть подкаст")
@@ -107,7 +114,7 @@ public class PersonController {
         personService.unlike(jwtUtil.getIdFromToken(jwt), podcastId);
     }
 
-    @Operation(summary = "Проверка лайка")
+    @Operation(summary = "Проверить лайк")
     @GetMapping("/is-liked/{podcastId}")
     @PreAuthorize("hasRole('USER')")
     public boolean isPodcastLiked(@PathVariable @NotNull UUID podcastId,
@@ -115,7 +122,7 @@ public class PersonController {
         return personService.isPodcastLiked(jwtUtil.getIdFromToken(jwt), podcastId);
     }
 
-    @Operation(summary = "Проверка подписки")
+    @Operation(summary = "Проверить подписку")
     @GetMapping("/is-followed/{authorId}")
     @PreAuthorize("hasRole('USER')")
     public boolean isPersonFollowed(@PathVariable @NotNull UUID authorId,

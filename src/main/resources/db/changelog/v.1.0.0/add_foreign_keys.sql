@@ -28,6 +28,7 @@ create table podcast (
     description varchar(255),
     album_id uuid not null,
     person_id uuid not null,
+    creation_date date default now(),
     foreign key (person_id) references person(id),
     foreign key (album_id) references album(id)
 );

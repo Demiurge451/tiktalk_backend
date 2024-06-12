@@ -17,8 +17,8 @@ public class ReportedPodcast implements HasId {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected UUID id;
 
-    @Column(name = "creationDate", nullable = false)
-    private final LocalDateTime creationDate = LocalDateTime.now();
+    @Column(name = "creation_date", insertable = false, updatable = false)
+    private LocalDateTime creationDate;
 
     private String name;
 

@@ -3,6 +3,7 @@ package com.edu.tiktalk_backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,8 +53,6 @@ public class Podcast implements HasId {
 
     private String imageUrl;
 
-    @Override
-    public UUID getId() {
-        return id;
-    }
+    @Column(name = "creation_date", insertable = false, updatable = false)
+    private LocalDateTime creationDate;
 }

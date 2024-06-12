@@ -11,8 +11,8 @@ public enum ReportedPodcastSort {
     ID_DESC(Sort.by(Sort.Direction.DESC, "id")),
     NAME_ASC(Sort.by(Sort.Direction.ASC, "name")),
     NAME_DESC(Sort.by(Sort.Direction.DESC, "name")),
-    CREATION_DATE_ASC(Sort.by(Sort.Direction.ASC, "creationDate")),
-    CREATION_DATE_DESC(Sort.by(Sort.Direction.DESC, "creationDate"));
+    CREATION_DATE_ASC(Sort.by(Sort.Direction.ASC, "creation_date")),
+    CREATION_DATE_DESC(Sort.by(Sort.Direction.DESC, "creation_date"));
 
     private final Sort sortValue;
 }

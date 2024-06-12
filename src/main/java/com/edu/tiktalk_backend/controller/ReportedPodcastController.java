@@ -28,7 +28,7 @@ public class ReportedPodcastController {
     private final ReportedPodcastServiceImpl reportedPodcastService;
     private final ReportedPodcastMapper reportedPodcastMapper;
 
-    @Operation(summary = "Получить все обжалованные подкасты")
+    @Operation(summary = "Список обжалованных подкастов")
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     public @Valid List<ReportedPodcastResponse> getReportedPodcasts(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
@@ -39,7 +39,7 @@ public class ReportedPodcastController {
         );
     }
 
-    @Operation(summary = "Получить обжалованный подкаст")
+    @Operation(summary = "Информация об обжалованном подкасте")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ReportedPodcastResponse getPodcast(@PathVariable @NotNull UUID id) {
