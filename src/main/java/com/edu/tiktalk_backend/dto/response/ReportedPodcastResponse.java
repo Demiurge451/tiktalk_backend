@@ -29,4 +29,6 @@ public class ReportedPodcastResponse {
     private String verdict;
 
     private LocalDateTime creationDate;
+
+    private String reportType;
 }

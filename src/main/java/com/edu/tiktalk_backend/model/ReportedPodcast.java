@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.model;
 
+import com.edu.tiktalk_backend.enums.ReportType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,4 +44,7 @@ public class ReportedPodcast implements HasId {
     private String imageUrl;
 
     private String verdict;
+
+    @Enumerated(EnumType.STRING)
+    private ReportType reportType;
 }

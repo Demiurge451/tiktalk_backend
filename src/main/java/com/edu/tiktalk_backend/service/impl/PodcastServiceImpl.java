@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.service.impl;
 
+import com.edu.tiktalk_backend.enums.ReportType;
 import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportedPodcastMapper;
@@ -83,6 +84,7 @@ public class PodcastServiceImpl implements PodcastService {
         podcastRepository.deleteById(id);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
+        banned.setReportType(ReportType.DELETE);
         return reportedPodcastService.save(banned);
     }
 
@@ -95,6 +97,7 @@ public class PodcastServiceImpl implements PodcastService {
         podcastRepository.save(podcast);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
+        banned.setReportType(ReportType.REJECT);
         return reportedPodcastService.save(banned);
     }
 

@@ -119,16 +119,16 @@ public class PodcastController {
     }
 
     @Operation(summary = "Забанить подкаст")
-    @PostMapping("/ban/podcast/{person_id}")
+    @PostMapping("/ban/podcast/{podcastId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public UUID banPodcast(@PathVariable UUID person_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        return podcastService.banPodcast(person_id, verdict);
+    public UUID banPodcast(@PathVariable UUID podcastId, @RequestParam @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.banPodcast(podcastId, verdict);
     }
 
     @Operation(summary = "Отклонить жалобы на подкаст")
     @PostMapping("/reject/{podcast_id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public UUID rejectReports(@PathVariable UUID podcast_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+    public UUID rejectReports(@PathVariable UUID podcast_id, @RequestParam @NotBlank @Size(min = 1, max = 1024) String verdict) {
         return podcastService.rejectReports(podcast_id, verdict);
     }
 
