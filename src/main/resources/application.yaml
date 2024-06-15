@@ -37,6 +37,12 @@ spring:
     client-id: admin-cli
     grant-type: password
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUE_URI}
+
 minio:
   host: ${MINIO_HOST:http://127.0.0.1:9000}
   download-host: ${DOWNLOAD_HOST:http://localhost:9000}
