@@ -103,11 +103,19 @@ public class PodcastServiceImpl implements PodcastService {
 
     @Override
     @Transactional
-    public void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image) {
+    public void uploadImage(UUID personId, UUID podcastId, MultipartFile image) {
+        checkBelong(personId, podcastId);
+        Podcast podcast = getById(podcastId);
+        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
+        podcastRepository.save(podcast);
+    }
+
+    @Override
+    @Transactional
+    public void uploadAudio(UUID personId, UUID podcastId, MultipartFile audio) {
         checkBelong(personId, podcastId);
         Podcast podcast = getById(podcastId);
         podcast.setAudioUrl(downloadService.upload(audio, BucketEnum.PODCAST_BUCKET));
-        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
         podcastRepository.save(podcast);
     }
 

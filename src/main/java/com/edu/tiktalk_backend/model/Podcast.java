@@ -16,13 +16,17 @@ import java.util.UUID;
 public class Podcast implements HasId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     protected UUID id;
 
     @Version
+    @Column(name = "version")
     private long version;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
@@ -45,12 +49,16 @@ public class Podcast implements HasId {
     @ManyToMany(mappedBy = "likedPodcasts", cascade = CascadeType.ALL)
     private List<Person> likedPersons;
 
+    @Column(name = "likes")
     private int likes;
 
+    @Column(name = "reports_count")
     private int reportsCount;
 
+    @Column(name = "audio_url")
     private String audioUrl;
 
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "creation_date", insertable = false, updatable = false)

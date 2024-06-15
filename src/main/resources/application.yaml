@@ -9,8 +9,8 @@ spring:
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:6432/tiktalk_db}
-    username: ${POSTGRES_USER:username}
-    password: ${POSTGRES_PASSWORD:password}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 
   liquibase:
     enabled: true
@@ -32,8 +32,8 @@ spring:
   keycloak:
     server-url: ${SERVER_URL:http://localhost:8180}
     realm: tiktalk-realm
-    username: superadmin
-    password: superadmin
+    username: ${KEYCLOAK_REALM_ADMIN_USERNAME}
+    password: ${KEYCLOAK_REALM_ADMIN_PASSWORD}
     client-id: admin-cli
     grant-type: password
 
@@ -45,12 +45,12 @@ spring:
 
 minio:
   host: ${MINIO_HOST:http://127.0.0.1:9000}
-  download-host: ${DOWNLOAD-HOST:http://localhost:9000}
-  user: root
-  password: password
+  download-host: ${DOWNLOAD_HOST:http://localhost:9000}
+  user: ${MINIO_ROOT_USER}
+  password: ${MINIO_ROOT_PASSWORD}
 
 springdoc:
   swagger-ui:
     oauth:
       client-id: clientback
-      client-secret: ff7wam2fIGjRDK89ns9RiPK15PnnEuvx
+      client-secret: ${SPRINGDOC_CLIENT_SECRET}
