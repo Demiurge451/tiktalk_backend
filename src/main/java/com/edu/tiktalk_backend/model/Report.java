@@ -14,10 +14,13 @@ import java.util.UUID;
 public class Report implements HasId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     protected UUID id;
 
+    @Column(name = "theme")
     private String theme;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)

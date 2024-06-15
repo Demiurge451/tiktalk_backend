@@ -38,6 +38,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Person getSelf(UUID loginId) {
+        return personRepository.findById(loginId).orElseThrow(() -> new NotFoundException("Person not found"));
+    }
+
+    @Override
     @Transactional
     public void delete(UUID loginId, UUID id) {
         personRepository.deleteById(id);
@@ -53,9 +58,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public Person update(UUID loginId, UUID personId, Person item) {
-        checkBelong(loginId, personId);
-        Person person = getById(personId);
+    public Person update(UUID loginId, Person item) {
+        checkBelong(loginId, item.getId());
+        Person person = getById(item.getId());
         personMapper.updatePerson(item, person);
         return personRepository.save(person);
     }

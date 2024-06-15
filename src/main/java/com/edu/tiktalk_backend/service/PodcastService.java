@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PodcastService extends CrudService<Podcast, UUID> {
+    List<Podcast> getSubscribedPodcasts(PageRequest pageRequest, UUID loginId);
+
     List<Podcast> findByName(PageRequest pageRequest, String name);
 
     UUID banPodcast(UUID id, String verdict);
@@ -17,5 +19,7 @@ public interface PodcastService extends CrudService<Podcast, UUID> {
 
     UUID reportPodcast(UUID reporterId, Report report);
 
-    void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image);
+    void uploadImage(UUID personId, UUID podcastId, MultipartFile image);
+
+    void uploadAudio(UUID personId, UUID podcastId, MultipartFile audio);
 }

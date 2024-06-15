@@ -5,10 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum RolesEnum {
-    USER("USER"),
-    ADMIN("ADMIN"),
-    SUPER_ADMIN("SUPER_ADMIN");
+public enum ReportType {
+    DELETE("podcast is deleted"),
+    REJECT("reports are rejected");
 
-    private final String name;
+    private final String type;
 }

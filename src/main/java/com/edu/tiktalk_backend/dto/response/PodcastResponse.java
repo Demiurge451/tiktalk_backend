@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,4 +37,6 @@ public class PodcastResponse {
     private String imageUrl;
 
     private String audioUrl;
+
+    private LocalDateTime creationDate;
 }

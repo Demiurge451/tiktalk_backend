@@ -42,6 +42,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public UUID save(UUID loginId, Report report) {
+        report.setReporterId(loginId);
         Report savedReport = reportRepository.save(report);
         return savedReport.getId();
     }
