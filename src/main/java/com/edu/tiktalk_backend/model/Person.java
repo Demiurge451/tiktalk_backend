@@ -22,8 +22,8 @@ public class Person implements HasId {
 
     @ManyToMany
     @JoinTable(
-            name = "subscriptions",
-            joinColumns = @JoinColumn(name = "person_id"),
+            name = "followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Person> subscriptions;

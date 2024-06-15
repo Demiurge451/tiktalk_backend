@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.controller;
 
+import com.edu.tiktalk_backend.dto.EmptyResponse;
 import com.edu.tiktalk_backend.dto.request.AlbumRequest;
 import com.edu.tiktalk_backend.dto.response.AlbumResponse;
 import com.edu.tiktalk_backend.mapper.AlbumMapper;
@@ -68,8 +69,9 @@ public class AlbumController {
     @Operation(summary = "Удалить альбом")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public void deleteAlbum(@PathVariable @NotNull UUID id, @AuthenticationPrincipal Jwt jwt) {
+    public EmptyResponse deleteAlbum(@PathVariable @NotNull UUID id, @AuthenticationPrincipal Jwt jwt) {
         albumService.delete(jwtUtil.getIdFromToken(jwt), id);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Редактировать альбом")

@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.controller;
 
+import com.edu.tiktalk_backend.dto.EmptyResponse;
 import com.edu.tiktalk_backend.dto.request.PersonRequest;
 import com.edu.tiktalk_backend.dto.response.PersonResponse;
 import com.edu.tiktalk_backend.mapper.PersonMapper;
@@ -60,17 +61,19 @@ public class PersonController {
     @Operation(summary = "Загрузить аватарку")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasRole('USER')")
-    public void uploadImage(@RequestPart(name = "image") MultipartFile image,
-                            @AuthenticationPrincipal Jwt jwt) {
+    public EmptyResponse uploadImage(@RequestPart(name = "image") MultipartFile image,
+                                     @AuthenticationPrincipal Jwt jwt) {
         personService.upload(jwtUtil.getIdFromToken(jwt), image);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Удалить человека")
     @DeleteMapping("/{personId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deletePerson(@PathVariable @NotNull UUID personId,
+    public EmptyResponse deletePerson(@PathVariable @NotNull UUID personId,
                              @AuthenticationPrincipal Jwt jwt) {
         personService.delete(jwtUtil.getIdFromToken(jwt), personId);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Редактировать данные человека")
@@ -85,33 +88,37 @@ public class PersonController {
     @Operation(summary = "Лайкнуть подкаст")
     @PostMapping("/like/{podcastId}")
     @PreAuthorize("hasRole('USER')")
-    public void likePodcast(@PathVariable @NotNull UUID podcastId,
+    public EmptyResponse likePodcast(@PathVariable @NotNull UUID podcastId,
                             @AuthenticationPrincipal Jwt jwt) {
         personService.like(jwtUtil.getIdFromToken(jwt), podcastId);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Подписаться на человека")
     @PostMapping("/follow/{authorId}")
     @PreAuthorize("hasRole('USER')")
-    public void followPerson(@PathVariable @NotNull UUID authorId,
+    public EmptyResponse followPerson(@PathVariable @NotNull UUID authorId,
                              @AuthenticationPrincipal Jwt jwt) {
         personService.follow(jwtUtil.getIdFromToken(jwt), authorId);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Отписаться от человека")
     @DeleteMapping("/unfollow/{authorId}")
     @PreAuthorize("hasRole('USER')")
-    public void unfollowPerson(@PathVariable @NotNull UUID authorId,
+    public EmptyResponse unfollowPerson(@PathVariable @NotNull UUID authorId,
                                @AuthenticationPrincipal Jwt jwt) {
         personService.unfollow(jwtUtil.getIdFromToken(jwt), authorId);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Убрать лайк с подкаста")
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/unlike/{podcastId}")
-    public void unlikePodcast(@PathVariable @NotNull UUID podcastId,
+    public EmptyResponse unlikePodcast(@PathVariable @NotNull UUID podcastId,
                               @AuthenticationPrincipal Jwt jwt) {
         personService.unlike(jwtUtil.getIdFromToken(jwt), podcastId);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Проверить лайк")
