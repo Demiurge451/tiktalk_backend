@@ -20,4 +20,11 @@
             <dropTable tableName="reported_podcast"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="3" author="konstantin">
+        <sqlFile path="add_report_type_to_reported_podcast.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <dropColumn tableName="reported_podcast" columnName="report_type"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

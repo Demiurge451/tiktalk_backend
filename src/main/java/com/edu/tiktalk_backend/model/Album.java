@@ -15,10 +15,13 @@ import java.util.UUID;
 public class Album implements HasId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     protected UUID id;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(targetEntity = Person.class, fetch = FetchType.EAGER)

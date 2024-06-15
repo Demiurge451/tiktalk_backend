@@ -14,8 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Person implements HasId {
     @Id
+    @Column(name = "id")
     private UUID id;
 
+    @Column(name = "name")
     private String name;
 
     @ManyToMany
@@ -43,5 +45,6 @@ public class Person implements HasId {
     )
     private List<Podcast> likedPodcasts;
 
+    @Column(name = "image_url")
     private String imageUrl;
 }

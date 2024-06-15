@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.service.impl;
 
+import com.edu.tiktalk_backend.enums.ReportType;
 import com.edu.tiktalk_backend.exception.NotFoundException;
 import com.edu.tiktalk_backend.mapper.PodcastMapper;
 import com.edu.tiktalk_backend.mapper.ReportedPodcastMapper;
@@ -83,6 +84,7 @@ public class PodcastServiceImpl implements PodcastService {
         podcastRepository.deleteById(id);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
+        banned.setReportType(ReportType.DELETE);
         return reportedPodcastService.save(banned);
     }
 
@@ -95,16 +97,25 @@ public class PodcastServiceImpl implements PodcastService {
         podcastRepository.save(podcast);
         ReportedPodcast banned = reportedPodcastMapper.mapRequestToItem(podcastMapper.mapPodcastToReported(podcast));
         banned.setVerdict(verdict);
+        banned.setReportType(ReportType.REJECT);
         return reportedPodcastService.save(banned);
     }
 
     @Override
     @Transactional
-    public void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image) {
+    public void uploadImage(UUID personId, UUID podcastId, MultipartFile image) {
+        checkBelong(personId, podcastId);
+        Podcast podcast = getById(podcastId);
+        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
+        podcastRepository.save(podcast);
+    }
+
+    @Override
+    @Transactional
+    public void uploadAudio(UUID personId, UUID podcastId, MultipartFile audio) {
         checkBelong(personId, podcastId);
         Podcast podcast = getById(podcastId);
         podcast.setAudioUrl(downloadService.upload(audio, BucketEnum.PODCAST_BUCKET));
-        podcast.setImageUrl(downloadService.upload(image, BucketEnum.IMAGE_BUCKET));
         podcastRepository.save(podcast);
     }
 

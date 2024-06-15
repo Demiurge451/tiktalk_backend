@@ -78,15 +78,24 @@ public class PodcastController {
         return podcastService.save(jwtUtil.getIdFromToken(jwt), podcastMapper.mapRequestToItem(podcastRequest));
     }
 
-    @Operation(summary = "Загрузить изображение и видео")
+    @Operation(summary = "Загрузить изображение")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/upload/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void upload(
+    @PostMapping(value = "/uploadImage/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void uploadImage(
             @PathVariable @NotNull UUID podcastId,
-            @RequestPart(value = "audio") MultipartFile audio,
             @RequestPart(value = "image") MultipartFile image,
             @AuthenticationPrincipal Jwt jwt) {
-        podcastService.upload(jwtUtil.getIdFromToken(jwt), podcastId, audio, image);
+        podcastService.uploadImage(jwtUtil.getIdFromToken(jwt), podcastId, image);
+    }
+
+    @Operation(summary = "Загрузить аудио")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/uploadAudio/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void uploadAudio(
+            @PathVariable @NotNull UUID podcastId,
+            @RequestPart(value = "audio") MultipartFile audio,
+            @AuthenticationPrincipal Jwt jwt) {
+        podcastService.uploadAudio(jwtUtil.getIdFromToken(jwt), podcastId, audio);
     }
 
     @Operation(summary = "Удалить подкаст")
@@ -119,16 +128,16 @@ public class PodcastController {
     }
 
     @Operation(summary = "Забанить подкаст")
-    @PostMapping("/ban/podcast/{person_id}")
+    @PostMapping("/ban/podcast/{podcastId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public UUID banPodcast(@PathVariable UUID person_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
-        return podcastService.banPodcast(person_id, verdict);
+    public UUID banPodcast(@PathVariable UUID podcastId, @RequestParam @NotBlank @Size(min = 1, max = 1024) String verdict) {
+        return podcastService.banPodcast(podcastId, verdict);
     }
 
     @Operation(summary = "Отклонить жалобы на подкаст")
     @PostMapping("/reject/{podcast_id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public UUID rejectReports(@PathVariable UUID podcast_id, @RequestBody @NotBlank @Size(min = 1, max = 1024) String verdict) {
+    public UUID rejectReports(@PathVariable UUID podcast_id, @RequestParam @NotBlank @Size(min = 1, max = 1024) String verdict) {
         return podcastService.rejectReports(podcast_id, verdict);
     }
 

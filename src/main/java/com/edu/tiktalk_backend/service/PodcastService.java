@@ -1,6 +1,5 @@
 package com.edu.tiktalk_backend.service;
 
-import com.edu.tiktalk_backend.dto.response.PodcastResponse;
 import com.edu.tiktalk_backend.model.Podcast;
 import com.edu.tiktalk_backend.model.Report;
 import org.springframework.data.domain.PageRequest;
@@ -20,5 +19,7 @@ public interface PodcastService extends CrudService<Podcast, UUID> {
 
     UUID reportPodcast(UUID reporterId, Report report);
 
-    void upload(UUID personId, UUID podcastId, MultipartFile audio, MultipartFile image);
+    void uploadImage(UUID personId, UUID podcastId, MultipartFile image);
+
+    void uploadAudio(UUID personId, UUID podcastId, MultipartFile audio);
 }

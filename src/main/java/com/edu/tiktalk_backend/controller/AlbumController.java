@@ -32,7 +32,7 @@ public class AlbumController {
     private final AlbumMapper albumMapper;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "Список альбом")
+    @Operation(summary = "Список альбомов")
     @GetMapping("/")
     public @Valid List<AlbumResponse> getAlbums(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(1000) int page,
                                                 @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000) int size,
@@ -42,7 +42,7 @@ public class AlbumController {
         );
     }
 
-    @Operation(summary = "Список моих альбом")
+    @Operation(summary = "Список моих альбомов")
     @GetMapping("/my")
     @PreAuthorize("hasRole('USER')")
     public @Valid List<AlbumResponse> getMyAlbums(@AuthenticationPrincipal Jwt jwt) {
