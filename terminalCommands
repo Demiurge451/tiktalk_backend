@@ -1,2 +1,0 @@
-"drop all tables in database"
-liquibase --changeLogFile=db.changelog-master.xml --url=jdbc:postgresql://localhost:6432/tiktalk_db --username username --password c5e7c973-eda0-49cf-ac38-60e3172ff6d9 dropAll;
