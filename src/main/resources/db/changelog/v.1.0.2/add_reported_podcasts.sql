@@ -6,8 +6,8 @@ create table reported_podcast(
     album_id uuid not null,
     person_id uuid not null,
     verdict varchar(1024) not null,
-    image_url varchar(1024) unique,
-    audio_url varchar(1024) unique,
+    image_url varchar(1024),
+    audio_url varchar(1024),
     foreign key (person_id) references person(id),
     foreign key (album_id) references album(id)
 );

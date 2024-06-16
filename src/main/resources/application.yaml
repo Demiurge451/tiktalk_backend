@@ -30,7 +30,7 @@ spring:
       max-request-size: 50MB
 
   keycloak:
-    server-url: ${SERVER_URL:http://localhost:8180}
+    server-url: ${KEYCLOAK_HOST:http://localhost:8180}
     realm: tiktalk-realm
     username: ${KEYCLOAK_REALM_ADMIN_USERNAME}
     password: ${KEYCLOAK_REALM_ADMIN_PASSWORD}
@@ -42,6 +42,9 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${ISSUE_URI:http://localhost:8180/realms/tiktalk-realm}
+
+logging:
+  config: classpath:log4j2-plain.xml
 
 minio:
   host: ${MINIO_HOST:http://127.0.0.1:9000}
