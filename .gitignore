@@ -34,7 +34,7 @@ build/
 
 .data/
 
-env.dev
+.env
 env2.dev
 
 terminalCommands
