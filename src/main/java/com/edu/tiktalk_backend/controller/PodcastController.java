@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.controller;
 
+import com.edu.tiktalk_backend.dto.EmptyResponse;
 import com.edu.tiktalk_backend.dto.request.PodcastRequest;
 import com.edu.tiktalk_backend.dto.request.ReportRequest;
 import com.edu.tiktalk_backend.dto.response.PodcastResponse;
@@ -81,29 +82,32 @@ public class PodcastController {
     @Operation(summary = "Загрузить изображение")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/uploadImage/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void uploadImage(
+    public EmptyResponse uploadImage(
             @PathVariable @NotNull UUID podcastId,
             @RequestPart(value = "image") MultipartFile image,
             @AuthenticationPrincipal Jwt jwt) {
         podcastService.uploadImage(jwtUtil.getIdFromToken(jwt), podcastId, image);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Загрузить аудио")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/uploadAudio/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void uploadAudio(
+    public EmptyResponse uploadAudio(
             @PathVariable @NotNull UUID podcastId,
             @RequestPart(value = "audio") MultipartFile audio,
             @AuthenticationPrincipal Jwt jwt) {
         podcastService.uploadAudio(jwtUtil.getIdFromToken(jwt), podcastId, audio);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Удалить подкаст")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public void deletePodcast(@PathVariable @NotNull UUID id,
+    public EmptyResponse deletePodcast(@PathVariable @NotNull UUID id,
                               @AuthenticationPrincipal Jwt jwt) {
         podcastService.delete(jwtUtil.getIdFromToken(jwt), id);
+        return new EmptyResponse();
     }
 
     @Operation(summary = "Редактировать подкаст")

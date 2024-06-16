@@ -122,7 +122,6 @@ public class PodcastServiceImpl implements PodcastService {
     @Override
     @Transactional
     public UUID reportPodcast(UUID personId, Report report) {
-        checkBelong(personId, report.getPodcastId());
         Podcast podcast = getById(report.getPodcastId());
         podcast.setReportsCount(podcast.getReportsCount() + 1);
         podcastRepository.save(podcast);

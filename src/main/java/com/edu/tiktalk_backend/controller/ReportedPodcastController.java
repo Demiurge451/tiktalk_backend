@@ -1,5 +1,6 @@
 package com.edu.tiktalk_backend.controller;
 
+import com.edu.tiktalk_backend.dto.EmptyResponse;
 import com.edu.tiktalk_backend.dto.response.ReportedPodcastResponse;
 import com.edu.tiktalk_backend.mapper.ReportedPodcastMapper;
 import com.edu.tiktalk_backend.service.impl.ReportedPodcastServiceImpl;
@@ -49,7 +50,8 @@ public class ReportedPodcastController {
     @Operation(summary = "Удалить обжалованный подкаст")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deletePodcast(@PathVariable @NotNull UUID id) {
+    public EmptyResponse deletePodcast(@PathVariable @NotNull UUID id) {
         reportedPodcastService.delete(id);
+        return new EmptyResponse();
     }
 }
