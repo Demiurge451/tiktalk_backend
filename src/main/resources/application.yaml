@@ -36,6 +36,7 @@ spring:
     password: ${KEYCLOAK_REALM_ADMIN_PASSWORD}
     client-id: admin-cli
     grant-type: password
+    openid-connect-url: ${OPEN_ID_CONNECT_URL:http://localhost:8180/realms/tiktalk-realm/.well-known/openid-configuration}
 
   security:
     oauth2:

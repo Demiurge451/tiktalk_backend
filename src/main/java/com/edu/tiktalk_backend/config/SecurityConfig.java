@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
@@ -29,7 +29,6 @@ public class SecurityConfig {
                         "/api/person/*",
                         "/swagger-ui/**",
                         "/v3/api-docs/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/keycloak/**").permitAll()
                 .anyRequest().authenticated()
         );
 

@@ -2,7 +2,10 @@ services:
   backend:
     container_name: backend
     hostname: backend
-    image: ghcr.io/demiurge451/tiktalk_backend:fix-TT-126
+    image: app
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8089:8089"
     depends_on:
@@ -67,8 +70,7 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
-    command:
-      - "start-dev"
+    command: start-dev
     ports:
      - "8180:8080"
     networks:
@@ -80,5 +82,4 @@ volumes:
   minio-data: { }
 
 networks:
-  tiktalk-network:
-    driver: bridge
+  tiktalk-network: { }
