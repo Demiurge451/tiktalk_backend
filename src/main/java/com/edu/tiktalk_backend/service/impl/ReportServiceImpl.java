@@ -46,11 +46,4 @@ public class ReportServiceImpl implements ReportService {
         Report savedReport = reportRepository.save(report);
         return savedReport.getId();
     }
-
-    @Override
-    public void checkBelong(UUID loginId, UUID reportId) {
-        if (!loginId.equals(getById(reportId).getReporterId())) {
-            throw new RuntimeException("loginId and reporterId does not match");
-        }
-    }
 }

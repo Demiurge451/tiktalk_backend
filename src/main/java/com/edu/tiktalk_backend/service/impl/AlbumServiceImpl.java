@@ -49,9 +49,9 @@ public class AlbumServiceImpl implements AlbumService {
     @Transactional
     public Album update(UUID loginId, UUID albumId, Album item) {
         checkBelong(loginId, albumId);
-        item.setPersonId(loginId);
         Album album = getById(albumId);
-        albumMapper.updateAlbum(item, album);
+        album.setTitle(item.getTitle());
+        album.setDescription(item.getDescription());
         return albumRepository.save(album);
     }
 
