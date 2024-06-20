@@ -59,9 +59,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public Person update(UUID loginId, Person item) {
-        checkBelong(loginId, item.getId());
-        Person person = getById(item.getId());
-        personMapper.updatePerson(item, person);
+        Person person = getById(loginId);
+        person.setName(item.getName());
         return personRepository.save(person);
     }
 
@@ -76,10 +75,12 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void like(UUID loginId, UUID podcastId) {
-        personRepository.like(loginId, podcastId);
         Podcast podcast = podcastService.getById(podcastId);
-        podcast.setLikes(podcast.getLikes() + 1);
-        podcastService.update(loginId, podcastId, podcast);
+        if (loginId != podcast.getPersonId()) {
+            personRepository.like(loginId, podcastId);
+            podcast.setLikes(podcast.getLikes() + 1);
+            podcastService.update(loginId, podcastId, podcast);
+        }
     }
 
     @Override
@@ -113,12 +114,5 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public boolean isPersonFollowed(UUID followerId, UUID authorId) {
         return personRepository.isPersonFollowed(followerId, authorId);
-    }
-
-    @Override
-    public void checkBelong(UUID loginId, UUID personId) {
-        if (!loginId.equals(getById(personId).getId())) {
-            throw new RuntimeException("login person isn't person for update");
-        }
     }
 }

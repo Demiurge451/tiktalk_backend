@@ -2,7 +2,10 @@ services:
   backend:
     container_name: backend
     hostname: backend
-    image: ghcr.io/demiurge451/tiktalk_backend:fix-TT-126
+    image: app
+    build:
+        context: .
+        dockerfile: Dockerfile
     ports:
       - "8089:8089"
     depends_on:
@@ -36,7 +39,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio-data:/data
-    command: server ~/minio --console-address :9090
+    command: server /data --console-address :9090
     networks:
       - tiktalk-network
 
@@ -48,9 +51,9 @@ services:
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       POSTGRES_DB: keycloakdb
     ports:
-    - "25432:5432"
+      - "25432:5432"
     networks:
-    - tiktalk-network
+      - tiktalk-network
     volumes:
       - keycloak-data:/var/lib/postgresql/data
 
@@ -67,17 +70,25 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HOSTNAME_STRICT_HTTPS: 'false'
+      KEYCLOAK_LOGLEVEL: DEBUG
     command:
       - "start-dev"
     ports:
-     - "8180:8080"
+      - "8180:8080"
+      - "8443:8443"
+    volumes:
+      - ./nginx/cert.pem:/etc/cert.pem
+      - ./nginx/key.pem:/etc/key.pem
     networks:
       - tiktalk-network
 
 volumes:
   postgres-data: {}
   keycloak-data: {}
-  minio-data: { }
+  minio-data: {}
 
 networks:
   tiktalk-network:

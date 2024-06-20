@@ -4,7 +4,6 @@ import com.edu.tiktalk_backend.dto.EmptyResponse;
 import com.edu.tiktalk_backend.dto.request.AlbumRequest;
 import com.edu.tiktalk_backend.dto.response.AlbumResponse;
 import com.edu.tiktalk_backend.mapper.AlbumMapper;
-import com.edu.tiktalk_backend.model.Album;
 import com.edu.tiktalk_backend.enums.AlbumSort;
 import com.edu.tiktalk_backend.service.AlbumService;
 import com.edu.tiktalk_backend.utils.JwtUtil;

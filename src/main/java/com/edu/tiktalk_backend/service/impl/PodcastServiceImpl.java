@@ -56,8 +56,8 @@ public class PodcastServiceImpl implements PodcastService {
 
     @Override
     @Transactional
-    public UUID save(UUID personId, Podcast podcast) {
-        podcast.setPersonId(personId);
+    public UUID save(UUID loginId, Podcast podcast) {
+        podcast.setPersonId(loginId);
         Podcast p = podcastRepository.save(podcast);
         return p.getId();
     }
@@ -65,10 +65,10 @@ public class PodcastServiceImpl implements PodcastService {
     @Override
     @Transactional
     public Podcast update(UUID personId, UUID podcastId, Podcast item) {
-        checkBelong(personId, podcastId);
-        item.setPersonId(personId);
         Podcast podcast = getById(podcastId);
-        podcastMapper.updatePodcast(item, podcast);
+        podcast.setName(item.getName());
+        podcast.setDescription(item.getDescription());
+        podcast.setAlbumId(item.getAlbumId());
         return podcastRepository.save(podcast);
     }
 
