@@ -21,8 +21,6 @@ public interface PersonService {
 
     Person update(UUID loginId, Person item);
 
-    void checkBelong(UUID loginId, UUID itemId);
-
     void follow(UUID loginId, UUID authorId);
 
     void like(UUID loginId, UUID podcastId);

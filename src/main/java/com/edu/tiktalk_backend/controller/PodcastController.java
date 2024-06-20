@@ -81,7 +81,7 @@ public class PodcastController {
 
     @Operation(summary = "Загрузить изображение")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/uploadImage/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/upload-image/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public EmptyResponse uploadImage(
             @PathVariable @NotNull UUID podcastId,
             @RequestPart(value = "image") MultipartFile image,
@@ -92,7 +92,7 @@ public class PodcastController {
 
     @Operation(summary = "Загрузить аудио")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/uploadAudio/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/upload-audio/{podcastId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public EmptyResponse uploadAudio(
             @PathVariable @NotNull UUID podcastId,
             @RequestPart(value = "audio") MultipartFile audio,
@@ -111,14 +111,14 @@ public class PodcastController {
     }
 
     @Operation(summary = "Редактировать подкаст")
-    @PutMapping("/{podcast_id}")
+    @PutMapping("/{podcastId}")
     @PreAuthorize("hasRole('USER')")
     public @Valid PodcastResponse updatePodcast(
-            @PathVariable @NotNull UUID podcast_id,
+            @PathVariable @NotNull UUID podcastId,
             @Valid @RequestBody PodcastRequest podcastRequest,
             @AuthenticationPrincipal Jwt jwt) {
         return podcastMapper.mapItemToResponse(podcastService.update(
-                jwtUtil.getIdFromToken(jwt), podcast_id, podcastMapper.mapRequestToItem(podcastRequest)));
+                jwtUtil.getIdFromToken(jwt), podcastId, podcastMapper.mapRequestToItem(podcastRequest)));
     }
 
     @Operation(summary = "Найти подкаст по названию")

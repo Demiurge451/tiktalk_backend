@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @SecurityScheme(
 		name = "Keycloak",
-		openIdConnectUrl = "http://localhost:8180/realms/tiktalk-realm/.well-known/openid-configuration",
+		openIdConnectUrl = "${openapikeycloak.openid-connect-url}",
 		scheme = "bearer",
 		type = SecuritySchemeType.OPENIDCONNECT,
 		in = SecuritySchemeIn.HEADER

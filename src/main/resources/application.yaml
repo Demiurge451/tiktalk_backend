@@ -19,10 +19,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
 
   servlet:
     multipart:
@@ -47,7 +47,7 @@ logging:
   config: classpath:log4j2-plain.xml
 
 minio:
-  host: ${MINIO_HOST:http://127.0.0.1:9000}
+  host: ${MINIO_HOST:http://localhost:9000}
   download-host: ${DOWNLOAD_HOST:http://localhost:9000}
   user: ${MINIO_ROOT_USER}
   password: ${MINIO_ROOT_PASSWORD}
@@ -57,3 +57,9 @@ springdoc:
     oauth:
       client-id: clientback
       client-secret: ${SPRINGDOC_CLIENT_SECRET}
+
+openapikeycloak:
+  openid-connect-url: ${OPEN_ID_CONNECT_URL:http://localhost:8180/realms/tiktalk-realm/.well-known/openid-configuration}
+
+app:
+  base-swagger-url: ${TOOL_SWAGGER_URL:http://localhost:8089}

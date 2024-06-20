@@ -17,5 +17,4 @@ public interface ReportService {
 
     void deleteAllByPodcast(UUID id);
 
-    void checkBelong(UUID loginId, UUID personId);
 }

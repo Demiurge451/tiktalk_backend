@@ -17,7 +17,7 @@ public class ReportRequest {
     @Size(min = 1, max = 55)
     private String theme;
 
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     private String description;
 
     @NotNull

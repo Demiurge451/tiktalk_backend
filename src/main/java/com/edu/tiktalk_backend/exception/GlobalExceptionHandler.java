@@ -19,12 +19,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> catchException(Exception e) {
-        return new ResponseEntity<>(new AppError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<AppError> catchException(AccessDeniedException e) {
         return new ResponseEntity<>(new AppError(HttpStatus.FORBIDDEN.value(), e.getMessage()),
                 HttpStatus.FORBIDDEN);
